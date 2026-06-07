@@ -1,0 +1,1279 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trang Quản Trị — HUIT Restaurant</title>
+    <link rel="stylesheet" href="css/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+
+    <!-- Header Navigation -->
+    <header>
+        <div class="nav-container">
+            <a href="index.html" class="logo">
+                <span>🍽️</span> HUIT Restaurant
+            </a>
+            <ul class="nav-links" id="nav-links">
+                <li><a href="index.html">Trang Chủ</a></li>
+                <li><a href="menu.html">Thực Đơn</a></li>
+            </ul>
+            <div class="nav-actions" id="nav-actions"></div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container" style="max-width: 1250px;">
+        <h1 style="font-size: 2.2rem; font-weight: 800; margin-bottom: 2rem;">Hệ Thống Quản Trị</h1>
+
+        <!-- Navigation Tabs -->
+        <div class="admin-tabs">
+            <div class="admin-tab active" onclick="switchTab('dashboard')">📊 Tổng Quan</div>
+            <div class="admin-tab" onclick="switchTab('orders')">📋 Đơn Hàng</div>
+            <div class="admin-tab" onclick="switchTab('reservations')">📅 Đặt Bàn</div>
+            <div class="admin-tab" onclick="switchTab('categories')">📂 Danh Mục</div>
+            <div class="admin-tab" onclick="switchTab('foods')">🍜 Món Ăn</div>
+            <div class="admin-tab" onclick="switchTab('coupons')">🎟️ Mã Giảm Giá</div>
+            <div class="admin-tab" onclick="switchTab('reviews')">⭐ Đánh Giá</div>
+        </div>
+
+        <!-- PANEL 1: DASHBOARD -->
+        <div id="panel-dashboard" class="admin-panel active-panel">
+            <div class="dashboard-grid" id="dashboard-stats">
+                <!-- Dynamic Stats Card -->
+            </div>
+            
+            <div style="display:grid; grid-template-columns: 1.2fr 0.8fr; gap:2.5rem; margin-top:2rem;">
+                <!-- Left: Top selling foods -->
+                <div class="card">
+                    <h3 style="font-weight:700; margin-bottom:1.5rem;">🔥 Món Ăn Bán Chạy Nhất</h3>
+                    <div class="table-responsive">
+                        <table class="table" style="margin-top:0;">
+                            <thead>
+                                <tr>
+                                    <th>Hạng</th>
+                                    <th>Món Ăn</th>
+                                    <th style="text-align:right;">Số lượng đã bán</th>
+                                </tr>
+                            </thead>
+                            <tbody id="top-foods-list">
+                                <!-- Dynamic top selling -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                
+                <!-- Right: Status Summary -->
+                <div class="card">
+                    <h3 style="font-weight:700; margin-bottom:1.5rem;">📊 Trạng Thái Đơn Hàng</h3>
+                    <div id="orders-status-summary" style="display:flex; flex-direction:column; gap:1.2rem;">
+                        <!-- Dynamic Status Summary -->
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Revenue & Orders Charts -->
+            <div style="display:grid; grid-template-columns: 1.2fr 0.8fr; gap:2.5rem; margin-top:2rem;">
+                <div class="card">
+                    <h3 style="font-weight:700; margin-bottom:1.5rem;">📈 Doanh Thu 7 Ngày Qua</h3>
+                    <div style="width: 100%; height: 280px; position: relative;">
+                        <canvas id="revenueChart"></canvas>
+                    </div>
+                </div>
+                <div class="card">
+                    <h3 style="font-weight:700; margin-bottom:1.5rem;">📊 Đơn Hàng 7 Ngày Qua</h3>
+                    <div style="width: 100%; height: 280px; position: relative;">
+                        <canvas id="ordersChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- PANEL 2: ORDERS -->
+        <div id="panel-orders" class="admin-panel" style="display:none;">
+            <div class="card">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1.5rem; flex-wrap:wrap; gap:1rem;">
+                    <h2 style="font-weight:700; font-size:1.4rem;">Danh Sách Đơn Hàng</h2>
+                    <div style="display:flex; gap:0.5rem;" id="order-filters">
+                        <button class="category-tab active" onclick="filterAdminOrders('all')">Tất cả</button>
+                        <button class="category-tab" onclick="filterAdminOrders('PENDING')">Chờ xác nhận</button>
+                        <button class="category-tab" onclick="filterAdminOrders('CONFIRMED')">Đã xác nhận</button>
+                        <button class="category-tab" onclick="filterAdminOrders('COMPLETED')">Hoàn thành</button>
+                        <button class="category-tab" onclick="filterAdminOrders('CANCELLED')">Đã hủy</button>
+                    </div>
+                </div>
+
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Mã đơn</th>
+                                <th>Khách hàng</th>
+                                <th>Thời gian</th>
+                                <th>Chi tiết món</th>
+                                <th>Tổng tiền</th>
+                                <th>Trạng thái</th>
+                                <th style="text-align:right;">Thao tác</th>
+                            </tr>
+                        </thead>
+                        <tbody id="admin-orders-list">
+                            <!-- Dynamic orders -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- PANEL 3: CATEGORIES -->
+        <div id="panel-categories" class="admin-panel" style="display:none;">
+            <div style="display:grid; grid-template-columns: 1fr 1.5fr; gap:2.5rem; align-items:start;">
+                <!-- Add category card -->
+                <div class="card">
+                    <h2 id="category-form-title" style="font-weight:700; font-size:1.3rem; margin-bottom:1.5rem;">Tạo Danh Mục Mới</h2>
+                    <form id="category-form">
+                        <input type="hidden" id="edit-cat-id">
+                        <div class="form-group">
+                            <label for="cat-name">Tên danh mục</label>
+                            <input type="text" id="cat-name" class="form-control" required placeholder="Ví dụ: Nước Uống">
+                        </div>
+                        <div style="display:flex; gap:0.75rem; margin-top:1.5rem;">
+                            <button type="submit" class="btn btn-primary" style="flex:1; justify-content:center;">Lưu danh mục</button>
+                            <button type="button" onclick="cancelCatEdit()" class="btn btn-secondary" style="display:none;" id="cancel-cat-edit-btn">Hủy</button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Categories list card -->
+                <div class="card">
+                    <h2 style="font-weight:700; font-size:1.3rem; margin-bottom:1.5rem;">Danh Mục Hiện Có</h2>
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Tên Danh Mục</th>
+                                    <th style="text-align:right;">Thao tác</th>
+                                </tr>
+                            </thead>
+                            <tbody id="admin-categories-list">
+                                <!-- Dynamic categories -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- PANEL 4: FOODS -->
+        <div id="panel-foods" class="admin-panel" style="display:none;">
+            <div class="card">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1.5rem;">
+                    <h2 style="font-weight:700; font-size:1.4rem;">Quản Lý Món Ăn</h2>
+                    <button onclick="openFoodModal(null)" class="btn btn-primary btn-sm">+ Thêm món ăn mới</button>
+                </div>
+
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Ảnh</th>
+                                <th>Món Ăn</th>
+                                <th>Danh mục</th>
+                                <th>Mô tả</th>
+                                <th>Đơn giá</th>
+                                <th style="text-align:right;">Thao tác</th>
+                            </tr>
+                        </thead>
+                        <tbody id="admin-foods-list">
+                            <!-- Dynamic foods -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- PANEL: RESERVATIONS -->
+        <div id="panel-reservations" class="admin-panel" style="display:none;">
+            <div class="card">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1.5rem; flex-wrap:wrap; gap:1rem;">
+                    <h2 style="font-weight:700; font-size:1.4rem;">Quản Lý Đặt Bàn Trước</h2>
+                    <div style="display:flex; gap:0.5rem;" id="res-filters">
+                        <button class="category-tab active" onclick="filterReservations('all')">Tất cả</button>
+                        <button class="category-tab" onclick="filterReservations('PENDING')">Chờ xác nhận</button>
+                        <button class="category-tab" onclick="filterReservations('CONFIRMED')">Đã xác nhận</button>
+                        <button class="category-tab" onclick="filterReservations('CANCELLED')">Đã hủy</button>
+                    </div>
+                </div>
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Mã</th>
+                                <th>Khách hàng</th>
+                                <th>Thời gian phục vụ</th>
+                                <th>Số khách</th>
+                                <th>Ghi chú</th>
+                                <th>Trạng thái</th>
+                                <th style="text-align:right;">Thao tác</th>
+                            </tr>
+                        </thead>
+                        <tbody id="admin-reservations-list">
+                            <!-- Dynamic reservations -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- PANEL: COUPONS -->
+        <div id="panel-coupons" class="admin-panel" style="display:none;">
+            <div style="display:grid; grid-template-columns: 1fr 1.5fr; gap:2.5rem; align-items:start;">
+                <!-- Add coupon card -->
+                <div class="card">
+                    <h2 style="font-weight:700; font-size:1.3rem; margin-bottom:1.5rem;">Tạo Mã Giảm Giá Mới</h2>
+                    <form id="coupon-form" onsubmit="saveCoupon(event)">
+                        <div class="form-group" style="margin-bottom:1rem;">
+                            <label for="coupon-code">Mã coupon (viết liền không dấu)</label>
+                            <input type="text" id="coupon-code" class="form-control" required placeholder="Ví dụ: SALE50">
+                        </div>
+                        <div class="form-group" style="margin-bottom:1rem;">
+                            <label for="coupon-percent">Phần trăm giảm (%)</label>
+                            <input type="number" id="coupon-percent" class="form-control" required min="1" max="100" placeholder="10">
+                        </div>
+                        <div class="form-group" style="margin-bottom:1rem;">
+                            <label for="coupon-max-discount">Giảm tối đa (VND)</label>
+                            <input type="number" id="coupon-max-discount" class="form-control" required min="0" placeholder="50000">
+                        </div>
+                        <div class="form-group" style="margin-bottom:1rem;">
+                            <label for="coupon-min-order">Giá trị đơn tối thiểu (VND)</label>
+                            <input type="number" id="coupon-min-order" class="form-control" required min="0" placeholder="100000">
+                        </div>
+                        <div class="form-group" style="margin-bottom:1rem;">
+                            <label for="coupon-expiry">Ngày hết hạn</label>
+                            <input type="date" id="coupon-expiry" class="form-control" required>
+                        </div>
+                        <div class="form-group" style="margin-bottom:1rem;">
+                            <label for="coupon-limit">Giới hạn số lần dùng</label>
+                            <input type="number" id="coupon-limit" class="form-control" required min="1" placeholder="100">
+                        </div>
+                        <button type="submit" class="btn btn-primary" style="width:100%; justify-content:center; margin-top:1rem;">Lưu Coupon</button>
+                    </form>
+                </div>
+                
+                <!-- Coupons list card -->
+                <div class="card">
+                    <h2 style="font-weight:700; font-size:1.3rem; margin-bottom:1.5rem;">Danh Sách Mã Giảm Giá</h2>
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Code</th>
+                                    <th>Giảm giá</th>
+                                    <th>Điều kiện</th>
+                                    <th>Lượt dùng (Đã dùng/Max)</th>
+                                    <th>Hạn dùng</th>
+                                    <th>Kích hoạt</th>
+                                    <th style="text-align:right;">Thao tác</th>
+                                </tr>
+                            </thead>
+                            <tbody id="admin-coupons-list">
+                                <!-- Dynamic coupons -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- PANEL: REVIEWS -->
+        <div id="panel-reviews" class="admin-panel" style="display:none;">
+            <div class="card">
+                <h2 style="font-weight:700; font-size:1.4rem; margin-bottom:1.5rem;">Quản Lý Đánh Giá & Bình Luận</h2>
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Món Ăn</th>
+                                <th>Khách hàng</th>
+                                <th>Đánh giá (Sao)</th>
+                                <th>Nội dung bình luận</th>
+                                <th>Thời gian</th>
+                                <th style="text-align:right;">Thao tác</th>
+                            </tr>
+                        </thead>
+                        <tbody id="admin-reviews-list">
+                            <!-- Dynamic reviews -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- FOOD MODAL DIALOG -->
+    <div class="modal" id="food-modal">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeFoodModal()">×</button>
+            <h2 id="food-modal-title" style="font-weight:700; margin-bottom:1.5rem;">Thêm Món Ăn Mới</h2>
+            
+            <form id="food-form">
+                <input type="hidden" id="food-id">
+                
+                <div class="form-group">
+                    <label for="food-name">Tên món ăn</label>
+                    <input type="text" id="food-name" class="form-control" required placeholder="Ví dụ: Cơm Chiên Dương Châu">
+                </div>
+                
+                <div class="form-group">
+                    <label for="food-category">Danh mục</label>
+                    <select id="food-category" class="form-control" required>
+                        <!-- Dynamic options -->
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="food-price">Đơn giá (VND)</label>
+                    <input type="number" id="food-price" class="form-control" required min="1000" placeholder="Đơn giá">
+                </div>
+
+                <div class="form-group">
+                    <label>Hình ảnh món ăn</label>
+                    <div class="image-upload-zone" id="image-upload-zone">
+                        <input type="file" id="food-image-file" accept="image/*" style="display:none;">
+                        <input type="hidden" id="food-image">
+                        
+                        <div class="upload-zone-prompt" id="upload-zone-prompt">
+                            <span class="upload-icon">📸</span>
+                            <p class="upload-text">Kéo thả ảnh vào đây hoặc <strong>nhấp để chọn</strong></p>
+                            <span class="upload-subtext">Hỗ trợ JPG, PNG, WEBP (Tối đa 10MB)</span>
+                        </div>
+                        
+                        <div class="upload-zone-preview" id="upload-zone-preview" style="display:none;">
+                            <img src="" id="upload-preview-img" alt="Xem trước ảnh">
+                            <div class="upload-preview-overlay">
+                                <button type="button" class="btn btn-secondary btn-sm" id="btn-change-image" style="background: rgba(255,255,255,0.95); color: var(--text-primary); border: none; box-shadow: 0 4px 10px rgba(0,0,0,0.15); font-weight:600;">
+                                    📸 Chọn ảnh khác
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="food-desc">Mô tả chi tiết</label>
+                    <textarea id="food-desc" class="form-control" rows="3" placeholder="Mô tả hương vị món ăn..."></textarea>
+                </div>
+                
+                <button type="submit" class="btn btn-primary" style="width:100%; justify-content:center; margin-top:1rem;">
+                    Lưu Món Ăn
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container" style="max-width: 1200px; margin: 0 auto; min-height: auto; padding: 0 2rem;">
+            <p style="margin-bottom: 1rem; font-weight: 600;">🍽️ HUIT Restaurant © 2026</p>
+            <p style="font-size: 0.85rem; color: var(--text-muted);">Địa chỉ: 140 Lê Trọng Tấn, Tây Thạnh, Tân Phú, TP. HCM</p>
+        </div>
+    </footer>
+
+    <script src="js/app.js"></script>
+    <script>
+        const defaultFoodImage = "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?q=80&w=400&auto=format&fit=crop";
+        let allAdminOrders = [];
+
+        document.addEventListener("DOMContentLoaded", () => {
+            const token = localStorage.getItem("token");
+            const userJson = localStorage.getItem("user");
+
+            if (!token || !userJson) {
+                window.location.href = "login.html";
+                return;
+            }
+
+            const user = JSON.parse(userJson);
+            if (user.role !== "ADMIN") {
+                window.location.href = "index.html";
+                return;
+            }
+
+            // Load panel data
+            loadDashboardData();
+            
+            // Hook up forms
+            document.getElementById("category-form").addEventListener("submit", saveCategory);
+            document.getElementById("food-form").addEventListener("submit", saveFood);
+
+            // Hook up image upload drag & drop
+            const uploadZone = document.getElementById("image-upload-zone");
+            const fileInput = document.getElementById("food-image-file");
+
+            if (uploadZone && fileInput) {
+                // Click on zone triggers file select
+                uploadZone.addEventListener("click", (e) => {
+                    if (e.target !== fileInput) {
+                        fileInput.click();
+                    }
+                });
+
+                // File input change
+                fileInput.addEventListener("change", (e) => {
+                    handleFileSelection(e.target.files[0]);
+                });
+
+                // Drag & Drop event listeners
+                uploadZone.addEventListener("dragover", (e) => {
+                    e.preventDefault();
+                    uploadZone.classList.add("dragover");
+                });
+
+                uploadZone.addEventListener("dragleave", () => {
+                    uploadZone.classList.remove("dragover");
+                });
+
+                uploadZone.addEventListener("drop", (e) => {
+                    e.preventDefault();
+                    uploadZone.classList.remove("dragover");
+                    if (e.dataTransfer.files.length > 0) {
+                        fileInput.files = e.dataTransfer.files;
+                        handleFileSelection(e.dataTransfer.files[0]);
+                    }
+                });
+            }
+        });
+
+        let revenueChartInstance = null;
+        let ordersChartInstance = null;
+
+        function switchTab(tabName) {
+            // Remove active tabs classes
+            document.querySelectorAll(".admin-tab").forEach(tab => tab.classList.remove("active"));
+            
+            // Add active to clicked
+            const tabs = document.querySelectorAll(".admin-tab");
+            for (let tab of tabs) {
+                if (tab.textContent.includes("Tổng Quan") && tabName === 'dashboard') tab.classList.add("active");
+                if (tab.textContent.includes("Đơn Hàng") && tabName === 'orders') tab.classList.add("active");
+                if (tab.textContent.includes("Đặt Bàn") && tabName === 'reservations') tab.classList.add("active");
+                if (tab.textContent.includes("Danh Mục") && tabName === 'categories') tab.classList.add("active");
+                if (tab.textContent.includes("Món Ăn") && tabName === 'foods') tab.classList.add("active");
+                if (tab.textContent.includes("Mã Giảm Giá") && tabName === 'coupons') tab.classList.add("active");
+                if (tab.textContent.includes("Đánh Giá") && tabName === 'reviews') tab.classList.add("active");
+            }
+
+            // Display panels
+            document.querySelectorAll(".admin-panel").forEach(p => p.style.display = "none");
+            document.getElementById(`panel-${tabName}`).style.display = "block";
+
+            // Load data accordingly
+            if (tabName === 'dashboard') loadDashboardData();
+            if (tabName === 'orders') loadAdminOrders();
+            if (tabName === 'reservations') loadAdminReservations();
+            if (tabName === 'categories') loadAdminCategories();
+            if (tabName === 'foods') loadAdminFoods();
+            if (tabName === 'coupons') loadAdminCoupons();
+            if (tabName === 'reviews') loadAdminReviews();
+        }
+
+        // ==================== DASHBOARD PANEL ====================
+        async function loadDashboardData() {
+            try {
+                const dbStats = await apiFetch("/stats/dashboard");
+                const statsContainer = document.getElementById("dashboard-stats");
+                
+                statsContainer.innerHTML = `
+                    <div class="card stat-card">
+                        <div class="stat-val">${dbStats.totalRevenue != null ? formatCurrency(dbStats.totalRevenue) : '0đ'}</div>
+                        <div class="stat-lbl">💰 Doanh Thu Tổng</div>
+                    </div>
+                    <div class="card stat-card">
+                        <div class="stat-val">${dbStats.totalOrders}</div>
+                        <div class="stat-lbl">📦 Tổng Đơn Hàng</div>
+                    </div>
+                    <div class="card stat-card">
+                        <div class="stat-val" style="color:var(--color-warning);">${dbStats.pendingOrders}</div>
+                        <div class="stat-lbl">⏳ Chờ Xác Nhận</div>
+                    </div>
+                    <div class="card stat-card">
+                        <div class="stat-val" style="color:var(--color-info);">${dbStats.totalFoods}</div>
+                        <div class="stat-lbl">🍜 Món Ăn</div>
+                    </div>
+                `;
+
+                // Load top selling foods
+                const topFoods = await apiFetch("/stats/top-foods?limit=5");
+                const topList = document.getElementById("top-foods-list");
+                topList.innerHTML = "";
+                
+                if (topFoods.length === 0) {
+                    topList.innerHTML = `<tr><td colspan="3" style="text-align:center; color:var(--text-secondary);">Chưa có dữ liệu bán chạy.</td></tr>`;
+                } else {
+                    topFoods.forEach((food, idx) => {
+                        const tr = document.createElement("tr");
+                        tr.innerHTML = `
+                            <td><strong style="color:${idx === 0 ? 'var(--accent-gold)' : idx === 1 ? 'silver' : idx === 2 ? '#cd7f32' : 'var(--text-muted)'}">${idx + 1}</strong></td>
+                            <td>${food.foodName}</td>
+                            <td style="text-align:right; font-weight:700;">${food.totalQuantity} món</td>
+                        `;
+                        topList.appendChild(tr);
+                    });
+                }
+
+                // Load status summary
+                const ordersSummary = await apiFetch("/stats/orders-summary");
+                const summaryContainer = document.getElementById("orders-status-summary");
+                
+                const stats = [
+                    { label: "Chờ xác nhận (PENDING)", val: ordersSummary.PENDING, color: "var(--color-warning)" },
+                    { label: "Đã xác nhận (CONFIRMED)", val: ordersSummary.CONFIRMED, color: "var(--color-info)" },
+                    { label: "Đã hoàn thành (COMPLETED)", val: ordersSummary.COMPLETED, color: "var(--color-success)" },
+                    { label: "Đã hủy (CANCELLED)", val: ordersSummary.CANCELLED, color: "var(--color-danger)" }
+                ];
+
+                summaryContainer.innerHTML = "";
+                stats.forEach(st => {
+                    const row = document.createElement("div");
+                    row.style.display = "flex";
+                    row.style.justifyContent = "space-between";
+                    row.style.borderBottom = "1px solid var(--border-color)";
+                    row.style.paddingBottom = "0.5rem";
+                    row.innerHTML = `
+                        <span style="font-weight:500;">${st.label}</span>
+                        <strong style="color:${st.color}; font-size:1.1rem;">${st.val}</strong>
+                    `;
+                    summaryContainer.appendChild(row);
+                });
+
+                // Load charts data
+                try {
+                    const revenueData = await apiFetch("/stats/revenue-by-day?days=7");
+                    const ordersData = await apiFetch("/stats/orders-by-day?days=7");
+
+                    const revLabels = revenueData.map(d => d.date);
+                    const revVals = revenueData.map(d => d.revenue);
+
+                    const ordLabels = ordersData.map(d => d.date);
+                    const ordVals = ordersData.map(d => d.count);
+
+                    const ctxRev = document.getElementById('revenueChart');
+                    if (ctxRev) {
+                        if (revenueChartInstance) {
+                            revenueChartInstance.destroy();
+                        }
+                        revenueChartInstance = new Chart(ctxRev, {
+                            type: 'line',
+                            data: {
+                                labels: revLabels,
+                                datasets: [{
+                                    label: 'Doanh thu (VND)',
+                                    data: revVals,
+                                    borderColor: 'rgb(255, 94, 44)',
+                                    backgroundColor: 'rgba(255, 94, 44, 0.1)',
+                                    fill: true,
+                                    tension: 0.3,
+                                    borderWidth: 3
+                                }]
+                            },
+                            options: {
+                                responsive: true,
+                                maintainAspectRatio: false,
+                                plugins: {
+                                    legend: { display: false }
+                                },
+                                scales: {
+                                    y: {
+                                        beginAtZero: true,
+                                        ticks: {
+                                            callback: function(value) {
+                                                return value.toLocaleString('vi-VN') + 'đ';
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        });
+                    }
+
+                    const ctxOrd = document.getElementById('ordersChart');
+                    if (ctxOrd) {
+                        if (ordersChartInstance) {
+                            ordersChartInstance.destroy();
+                        }
+                        ordersChartInstance = new Chart(ctxOrd, {
+                            type: 'bar',
+                            data: {
+                                labels: ordLabels,
+                                datasets: [{
+                                    label: 'Số đơn hàng',
+                                    data: ordVals,
+                                    backgroundColor: 'rgb(59, 130, 246)',
+                                    borderRadius: 6
+                                }]
+                            },
+                            options: {
+                                responsive: true,
+                                maintainAspectRatio: false,
+                                plugins: {
+                                    legend: { display: false }
+                                },
+                                scales: {
+                                    y: {
+                                        beginAtZero: true,
+                                        ticks: { stepSize: 1 }
+                                    }
+                                }
+                            }
+                        });
+                    }
+                } catch (e) {
+                    console.error("Charts load error", e);
+                }
+
+            } catch (error) {
+                console.error("Dashboard error", error);
+            }
+        }
+
+        // ==================== ORDERS PANEL ====================
+        async function loadAdminOrders() {
+            try {
+                const orders = await apiFetch("/orders");
+                allAdminOrders = orders;
+                renderAdminOrders(orders);
+            } catch (e) {}
+        }
+
+        function filterAdminOrders(status) {
+            // Highlight active button
+            const buttons = document.querySelectorAll("#order-filters button");
+            buttons.forEach(btn => btn.classList.remove("active"));
+            
+            const mapping = {
+                "all": "Tất cả",
+                "PENDING": "Chờ xác nhận",
+                "CONFIRMED": "Đã xác nhận",
+                "COMPLETED": "Hoàn thành",
+                "CANCELLED": "Đã hủy"
+            };
+
+            for (let btn of buttons) {
+                if (btn.textContent === mapping[status]) btn.classList.add("active");
+            }
+
+            if (status === "all") {
+                renderAdminOrders(allAdminOrders);
+            } else {
+                const filtered = allAdminOrders.filter(o => o.status === status);
+                renderAdminOrders(filtered);
+            }
+        }
+
+        function renderAdminOrders(orders) {
+            const list = document.getElementById("admin-orders-list");
+            list.innerHTML = "";
+
+            if (!orders || orders.length === 0) {
+                list.innerHTML = `<tr><td colspan="7" style="text-align:center; color:var(--text-secondary); padding: 3rem;">Không tìm thấy đơn hàng nào.</td></tr>`;
+                return;
+            }
+
+            orders.forEach(order => {
+                let statusClass = "status-pending";
+                let statusLabel = "Chờ xác nhận";
+
+                if (order.status === "CONFIRMED") {
+                    statusClass = "status-confirmed";
+                    statusLabel = "Đã xác nhận";
+                } else if (order.status === "COMPLETED") {
+                    statusClass = "status-completed";
+                    statusLabel = "Đã hoàn thành";
+                } else if (order.status === "CANCELLED") {
+                    statusClass = "status-cancelled";
+                    statusLabel = "Đã hủy";
+                }
+
+                // Map items details
+                let itemsDesc = "";
+                if (order.items && order.items.length > 0) {
+                    itemsDesc = order.items.map(it => `${it.food ? it.food.name : 'Món'} x${it.quantity}`).join("<br>");
+                }
+
+                // Actions buttons
+                let actionsHtml = "";
+                if (order.status === "PENDING") {
+                    actionsHtml = `
+                        <button onclick="updateOrderStatus(${order.id}, 'CONFIRMED')" class="btn btn-outline btn-sm" style="padding:0.3rem 0.6rem; font-size:0.8rem; margin-right:4px;">Nhận đơn</button>
+                        <button onclick="updateOrderStatus(${order.id}, 'CANCELLED')" class="btn btn-danger btn-sm" style="padding:0.3rem 0.6rem; font-size:0.8rem;">Hủy</button>
+                    `;
+                } else if (order.status === "CONFIRMED") {
+                    actionsHtml = `
+                        <button onclick="updateOrderStatus(${order.id}, 'COMPLETED')" class="btn btn-primary btn-sm" style="padding:0.3rem 0.6rem; font-size:0.8rem; margin-right:4px;">Giao thành công</button>
+                        <button onclick="updateOrderStatus(${order.id}, 'CANCELLED')" class="btn btn-danger btn-sm" style="padding:0.3rem 0.6rem; font-size:0.8rem;">Hủy</button>
+                    `;
+                } else if (order.status === "COMPLETED" || order.status === "CANCELLED") {
+                    actionsHtml = `
+                        <button onclick="deleteOrder(${order.id})" class="btn btn-danger btn-sm" style="padding:0.3rem 0.6rem; font-size:0.8rem; border:none; background:rgba(239, 68, 68, 0.1); color:var(--color-danger);">Xóa đơn</button>
+                    `;
+                }
+
+                const tr = document.createElement("tr");
+                tr.innerHTML = `
+                    <td><strong>#${order.id}</strong></td>
+                    <td>
+                        <div style="font-weight:600;">${order.customerName}</div>
+                        <div style="font-size:0.8rem; color:var(--text-secondary);">📞 ${order.phone}</div>
+                        <div style="font-size:0.8rem; color:var(--text-secondary); max-width:200px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">📍 ${order.address}</div>
+                    </td>
+                    <td style="font-size:0.85rem; color:var(--text-secondary);">${formatDate(order.orderDate)}</td>
+                    <td style="font-size:0.9rem; line-height:1.3;">${itemsDesc}</td>
+                    <td style="font-weight:700; color:var(--accent-orange);">${formatCurrency(order.totalPrice)}</td>
+                    <td><span class="status-badge ${statusClass}">${statusLabel}</span></td>
+                    <td style="text-align:right;">${actionsHtml}</td>
+                `;
+                list.appendChild(tr);
+            });
+        }
+
+        async function updateOrderStatus(orderId, newStatus) {
+            try {
+                await apiFetch(`/orders/${orderId}/status?status=${newStatus}`, {
+                    method: "PUT"
+                });
+                showToast("Cập nhật trạng thái đơn hàng thành công.", "success");
+                loadAdminOrders();
+            } catch (e) {}
+        }
+
+        async function deleteOrder(orderId) {
+            if (!confirm("Bạn muốn xóa bản ghi đơn hàng này vĩnh viễn khỏi hệ thống?")) return;
+            try {
+                await apiFetch(`/orders/${orderId}`, {
+                    method: "DELETE"
+                });
+                showToast("Đã xóa đơn hàng.", "success");
+                loadAdminOrders();
+            } catch (e) {}
+        }
+
+        // ==================== CATEGORIES PANEL ====================
+        async function loadAdminCategories() {
+            try {
+                const categories = await apiFetch("/categories");
+                const list = document.getElementById("admin-categories-list");
+                list.innerHTML = "";
+
+                categories.forEach(cat => {
+                    const tr = document.createElement("tr");
+                    tr.innerHTML = `
+                        <td><strong>#${cat.id}</strong></td>
+                        <td>${cat.name}</td>
+                        <td style="text-align:right;">
+                            <button onclick="editCategory(${cat.id}, '${cat.name}')" class="btn btn-secondary btn-sm" style="padding:0.3rem 0.6rem; font-size:0.8rem; margin-right:4px;">Sửa</button>
+                            <button onclick="deleteCategory(${cat.id})" class="btn btn-danger btn-sm" style="padding:0.3rem 0.6rem; font-size:0.8rem;">Xóa</button>
+                        </td>
+                    `;
+                    list.appendChild(tr);
+                });
+            } catch (e) {}
+        }
+
+        function editCategory(id, name) {
+            document.getElementById("edit-cat-id").value = id;
+            document.getElementById("cat-name").value = name;
+            document.getElementById("category-form-title").textContent = "Cập Nhật Danh Mục";
+            document.getElementById("cancel-cat-edit-btn").style.display = "inline-flex";
+        }
+
+        function cancelCatEdit() {
+            document.getElementById("edit-cat-id").value = "";
+            document.getElementById("cat-name").value = "";
+            document.getElementById("category-form-title").textContent = "Tạo Danh Mục Mới";
+            document.getElementById("cancel-cat-edit-btn").style.display = "none";
+        }
+
+        async function saveCategory(e) {
+            e.preventDefault();
+            const name = document.getElementById("cat-name").value.trim();
+            const editId = document.getElementById("edit-cat-id").value;
+
+            try {
+                if (editId) {
+                    // Update
+                    await apiFetch(`/categories/${editId}`, {
+                        method: "PUT",
+                        body: JSON.stringify({ name })
+                    });
+                    showToast("Đã cập nhật danh mục thành công.", "success");
+                } else {
+                    // Create
+                    await apiFetch("/categories", {
+                        method: "POST",
+                        body: JSON.stringify({ name })
+                    });
+                    showToast("Đã tạo danh mục mới thành công.", "success");
+                }
+                cancelCatEdit();
+                loadAdminCategories();
+            } catch (e) {}
+        }
+
+        async function deleteCategory(id) {
+            if (!confirm("Bạn muốn xóa danh mục này? (Lưu ý: Chỉ xóa được nếu danh mục không có món ăn nào)")) return;
+            try {
+                await apiFetch(`/categories/${id}`, {
+                    method: "DELETE"
+                });
+                showToast("Đã xóa danh mục thành công.", "success");
+                loadAdminCategories();
+            } catch (e) {}
+        }
+
+        // ==================== FOODS PANEL ====================
+        async function loadAdminFoods() {
+            try {
+                const foods = await apiFetch("/foods");
+                const list = document.getElementById("admin-foods-list");
+                list.innerHTML = "";
+
+                foods.forEach(food => {
+                    const tr = document.createElement("tr");
+                    const imgUrl = food.imageUrl && food.imageUrl.trim() !== "" ? food.imageUrl : defaultFoodImage;
+                    const catName = food.category ? food.category.name : "Không thuộc nhóm";
+
+                    tr.innerHTML = `
+                        <td><img src="${imgUrl}" alt="${food.name}" style="width:50px; height:50px; border-radius:var(--radius-sm); object-fit:cover;"></td>
+                        <td><strong style="font-size:1rem;">${food.name}</strong><br><small style="color:var(--text-muted)">ID: #${food.id}</small></td>
+                        <td><span class="status-badge status-confirmed" style="font-size:0.75rem; border-radius:4px; padding:0.2rem 0.5rem;">${catName}</span></td>
+                        <td style="max-width:220px; font-size:0.85rem; color:var(--text-secondary); overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">${food.description || 'Chưa cập nhật mô tả'}</td>
+                        <td style="font-weight:700; color:var(--accent-orange);">${formatCurrency(food.price)}</td>
+                        <td style="text-align:right;">
+                            <button onclick='openFoodModal(${JSON.stringify(food)})' class="btn btn-secondary btn-sm" style="padding:0.3rem 0.6rem; font-size:0.8rem; margin-right:4px;">Sửa</button>
+                            <button onclick="deleteFood(${food.id})" class="btn btn-danger btn-sm" style="padding:0.3rem 0.6rem; font-size:0.8rem;">Xóa</button>
+                        </td>
+                    `;
+                    list.appendChild(tr);
+                });
+            } catch (e) {}
+        }
+
+        function showImagePreview(url) {
+            const previewContainer = document.getElementById("upload-zone-preview");
+            const previewImg = document.getElementById("upload-preview-img");
+            const promptContainer = document.getElementById("upload-zone-prompt");
+            const foodImageInput = document.getElementById("food-image");
+
+            if (url && url.trim() !== "") {
+                previewImg.src = url;
+                previewContainer.style.display = "flex";
+                promptContainer.style.display = "none";
+                foodImageInput.value = url;
+            } else {
+                previewImg.src = "";
+                previewContainer.style.display = "none";
+                promptContainer.style.display = "flex";
+                foodImageInput.value = "";
+            }
+        }
+
+        function handleFileSelection(file) {
+            if (!file) return;
+
+            // Validate file type
+            if (!file.type.startsWith("image/")) {
+                showToast("Vui lòng chọn tệp tin hình ảnh.", "error");
+                return;
+            }
+
+            // Validate size (10MB)
+            if (file.size > 10 * 1024 * 1024) {
+                showToast("Tệp ảnh quá lớn. Kích thước tối đa là 10MB.", "error");
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                const previewContainer = document.getElementById("upload-zone-preview");
+                const previewImg = document.getElementById("upload-preview-img");
+                const promptContainer = document.getElementById("upload-zone-prompt");
+                
+                previewImg.src = e.target.result;
+                previewContainer.style.display = "flex";
+                promptContainer.style.display = "none";
+            };
+            reader.readAsDataURL(file);
+        }
+
+        async function openFoodModal(food = null) {
+            // Populate category select options first
+            try {
+                const categories = await apiFetch("/categories");
+                const select = document.getElementById("food-category");
+                select.innerHTML = '<option value="" disabled selected>Chọn danh mục</option>';
+                
+                categories.forEach(cat => {
+                    const opt = document.createElement("option");
+                    opt.value = cat.id;
+                    opt.textContent = cat.name;
+                    select.appendChild(opt);
+                });
+
+                // Reset file input element
+                document.getElementById("food-image-file").value = "";
+
+                if (food) {
+                    // Edit mode
+                    document.getElementById("food-modal-title").textContent = "Cập Nhật Món Ăn";
+                    document.getElementById("food-id").value = food.id;
+                    document.getElementById("food-name").value = food.name;
+                    document.getElementById("food-price").value = food.price;
+                    document.getElementById("food-desc").value = food.description || "";
+                    if (food.category) {
+                        document.getElementById("food-category").value = food.category.id;
+                    }
+                    showImagePreview(food.imageUrl || "");
+                } else {
+                    // Create mode
+                    document.getElementById("food-modal-title").textContent = "Thêm Món Ăn Mới";
+                    document.getElementById("food-id").value = "";
+                    document.getElementById("food-name").value = "";
+                    document.getElementById("food-price").value = "";
+                    document.getElementById("food-desc").value = "";
+                    document.getElementById("food-category").value = "";
+                    showImagePreview("");
+                }
+
+                // Show modal
+                document.getElementById("food-modal").classList.add("active");
+
+            } catch (e) {}
+        }
+
+        function closeFoodModal() {
+            document.getElementById("food-modal").classList.remove("active");
+        }
+
+        async function saveFood(e) {
+            e.preventDefault();
+            
+            const id = document.getElementById("food-id").value;
+            const name = document.getElementById("food-name").value.trim();
+            const categoryId = document.getElementById("food-category").value;
+            const price = parseFloat(document.getElementById("food-price").value);
+            const description = document.getElementById("food-desc").value.trim();
+            
+            let imageUrl = document.getElementById("food-image").value.trim();
+            const imageFile = document.getElementById("food-image-file").files[0];
+
+            // If a file is selected, upload it first
+            if (imageFile) {
+                try {
+                    showToast("Đang tải ảnh lên máy chủ...", "warning");
+                    const formData = new FormData();
+                    formData.append("file", imageFile);
+
+                    const token = localStorage.getItem("token");
+                    const headers = {};
+                    if (token) {
+                        headers["Authorization"] = `Bearer ${token}`;
+                    }
+
+                    const uploadRes = await fetch("http://localhost:8080/api/upload", {
+                        method: "POST",
+                        headers: headers,
+                        body: formData
+                    });
+
+                    const uploadData = await uploadRes.json();
+                    if (!uploadRes.ok) {
+                        throw new Error(uploadData.message || "Không thể tải hình ảnh lên.");
+                    }
+
+                    imageUrl = uploadData.imageUrl;
+                } catch (error) {
+                    showToast("Lỗi tải ảnh: " + error.message, "error");
+                    return; // Abort saving if upload failed
+                }
+            }
+
+            // Fallback to default if no image is present
+            if (!imageUrl) {
+                imageUrl = defaultFoodImage;
+            }
+
+            const foodPayload = {
+                name,
+                price,
+                imageUrl,
+                description,
+                category: { id: parseInt(categoryId) }
+            };
+
+            try {
+                if (id) {
+                    // Update
+                    await apiFetch(`/foods/${id}`, {
+                        method: "PUT",
+                        body: JSON.stringify(foodPayload)
+                    });
+                    showToast("Cập nhật món ăn thành công.", "success");
+                } else {
+                    // Create
+                    await apiFetch("/foods", {
+                        method: "POST",
+                        body: JSON.stringify(foodPayload)
+                    });
+                    showToast("Đã thêm món ăn mới.", "success");
+                }
+                closeFoodModal();
+                loadAdminFoods();
+            } catch (e) {}
+        }
+
+        async function deleteFood(id) {
+            if (!confirm("Bạn có chắc chắn muốn xóa món ăn này khỏi hệ thống?")) return;
+            try {
+                await apiFetch(`/foods/${id}`, {
+                    method: "DELETE"
+                });
+                showToast("Đã xóa món ăn khỏi thực đơn.", "success");
+                loadAdminFoods();
+            } catch (e) {}
+        }
+
+        // ==================== RESERVATIONS PANEL ====================
+        let allReservations = [];
+
+        async function loadAdminReservations() {
+            try {
+                const reservations = await apiFetch("/reservations");
+                allReservations = reservations;
+                renderAdminReservations(reservations);
+            } catch (e) {}
+        }
+
+        function filterReservations(status) {
+            const buttons = document.querySelectorAll("#res-filters button");
+            buttons.forEach(btn => btn.classList.remove("active"));
+            const mapping = {
+                "all": "Tất cả",
+                "PENDING": "Chờ xác nhận",
+                "CONFIRMED": "Đã xác nhận",
+                "CANCELLED": "Đã hủy"
+            };
+            for (let btn of buttons) {
+                if (btn.textContent === mapping[status]) btn.classList.add("active");
+            }
+
+            if (status === "all") {
+                renderAdminReservations(allReservations);
+            } else {
+                const filtered = allReservations.filter(r => r.status === status);
+                renderAdminReservations(filtered);
+            }
+        }
+
+        function renderAdminReservations(reservations) {
+            const list = document.getElementById("admin-reservations-list");
+            list.innerHTML = "";
+            if (!reservations || reservations.length === 0) {
+                list.innerHTML = `<tr><td colspan="7" style="text-align:center; color:var(--text-secondary); padding: 3rem;">Không tìm thấy lịch đặt bàn nào.</td></tr>`;
+                return;
+            }
+            reservations.forEach(res => {
+                let statusClass = "status-pending";
+                let statusLabel = "Chờ xác nhận";
+                if (res.status === "CONFIRMED") {
+                    statusClass = "status-completed";
+                    statusLabel = "Đã xác nhận";
+                } else if (res.status === "CANCELLED") {
+                    statusClass = "status-cancelled";
+                    statusLabel = "Đã hủy";
+                }
+
+                let actionsHtml = "";
+                if (res.status === "PENDING") {
+                    actionsHtml = `
+                        <button onclick="updateReservationStatus(${res.id}, 'CONFIRMED')" class="btn btn-outline btn-sm" style="padding:0.3rem 0.6rem; font-size:0.8rem; margin-right:4px;">Xác nhận</button>
+                        <button onclick="updateReservationStatus(${res.id}, 'CANCELLED')" class="btn btn-danger btn-sm" style="padding:0.3rem 0.6rem; font-size:0.8rem;">Hủy</button>
+                    `;
+                } else {
+                    actionsHtml = `
+                        <button onclick="deleteReservation(${res.id})" class="btn btn-danger btn-sm" style="padding:0.3rem 0.6rem; font-size:0.8rem; border:none; background:rgba(239, 68, 68, 0.1); color:var(--color-danger);">Xóa</button>
+                    `;
+                }
+
+                const tr = document.createElement("tr");
+                tr.innerHTML = `
+                    <td><strong>#${res.id}</strong></td>
+                    <td>
+                        <div style="font-weight:600;">${res.customerName}</div>
+                        <div style="font-size:0.8rem; color:var(--text-secondary);">📞 ${res.phone}</div>
+                        <div style="font-size:0.8rem; color:var(--text-secondary);">${res.email || 'Chưa cung cấp email'}</div>
+                    </td>
+                    <td>
+                        <div style="font-weight:600;">${res.reserveDate}</div>
+                        <div style="font-size:0.85rem; color:var(--text-secondary);">⏰ ${res.reserveTime}</div>
+                    </td>
+                    <td><strong>${res.numGuests} người</strong></td>
+                    <td style="max-width:200px; font-size:0.85rem; color:var(--text-secondary); overflow:hidden; text-overflow:ellipsis; white-space:nowrap;" title="${res.note || ''}">${res.note || '-'}</td>
+                    <td><span class="status-badge ${statusClass}">${statusLabel}</span></td>
+                    <td style="text-align:right;">${actionsHtml}</td>
+                `;
+                list.appendChild(tr);
+            });
+        }
+
+        async function updateReservationStatus(id, status) {
+            try {
+                await apiFetch(`/reservations/${id}/status?status=${status}`, { method: "PUT" });
+                showToast("Cập nhật trạng thái đặt bàn thành công.", "success");
+                loadAdminReservations();
+            } catch (e) {}
+        }
+
+        async function deleteReservation(id) {
+            if (!confirm("Bạn muốn xóa bản ghi đặt bàn này vĩnh viễn?")) return;
+            try {
+                await apiFetch(`/reservations/${id}`, { method: "DELETE" });
+                showToast("Đã xóa bản ghi đặt bàn.", "success");
+                loadAdminReservations();
+            } catch (e) {}
+        }
+
+        // ==================== COUPONS PANEL ====================
+        let allCoupons = [];
+
+        async function loadAdminCoupons() {
+            try {
+                const coupons = await apiFetch("/coupons");
+                allCoupons = coupons;
+                renderAdminCoupons(coupons);
+            } catch (e) {}
+        }
+
+        function renderAdminCoupons(coupons) {
+            const list = document.getElementById("admin-coupons-list");
+            list.innerHTML = "";
+            if (!coupons || coupons.length === 0) {
+                list.innerHTML = `<tr><td colspan="7" style="text-align:center; color:var(--text-secondary);">Không có mã giảm giá nào.</td></tr>`;
+                return;
+            }
+            coupons.forEach(cp => {
+                const tr = document.createElement("tr");
+                tr.innerHTML = `
+                    <td><strong>${cp.code}</strong></td>
+                    <td>Giảm ${cp.discountPercent}% (Tối đa ${formatCurrency(cp.maxDiscount)})</td>
+                    <td>Đơn tối thiểu ${formatCurrency(cp.minOrderAmount)}</td>
+                    <td>${cp.usedCount} / ${cp.usageLimit}</td>
+                    <td>${cp.expiryDate}</td>
+                    <td>
+                        <span class="status-badge ${cp.active ? 'status-completed' : 'status-cancelled'}" style="cursor:pointer;" onclick="toggleCouponActive(${cp.id})">
+                            ${cp.active ? 'Đang hoạt động' : 'Tạm khóa'}
+                        </span>
+                    </td>
+                    <td style="text-align:right;">
+                        <button class="btn btn-danger btn-sm" onclick="deleteCoupon(${cp.id})" style="padding:0.3rem 0.6rem; font-size:0.8rem;">Xóa</button>
+                    </td>
+                `;
+                list.appendChild(tr);
+            });
+        }
+
+        async function saveCoupon(e) {
+            e.preventDefault();
+            const code = document.getElementById("coupon-code").value.trim().toUpperCase();
+            const discountPercent = parseInt(document.getElementById("coupon-percent").value);
+            const maxDiscount = parseFloat(document.getElementById("coupon-max-discount").value);
+            const minOrderAmount = parseFloat(document.getElementById("coupon-min-order").value);
+            const expiryDate = document.getElementById("coupon-expiry").value;
+            const usageLimit = parseInt(document.getElementById("coupon-limit").value);
+
+            try {
+                await apiFetch("/coupons", {
+                    method: "POST",
+                    body: JSON.stringify({ code, discountPercent, maxDiscount, minOrderAmount, expiryDate, usageLimit, active: true })
+                });
+                showToast("Đã tạo mã giảm giá mới thành công.", "success");
+                document.getElementById("coupon-form").reset();
+                loadAdminCoupons();
+            } catch (e) {}
+        }
+
+        async function toggleCouponActive(id) {
+            try {
+                await apiFetch(`/coupons/${id}/toggle`, { method: "PUT" });
+                showToast("Thay đổi trạng thái coupon thành công.", "success");
+                loadAdminCoupons();
+            } catch (e) {}
+        }
+
+        async function deleteCoupon(id) {
+            if (!confirm("Bạn muốn xóa mã giảm giá này vĩnh viễn?")) return;
+            try {
+                await apiFetch(`/coupons/${id}`, { method: "DELETE" });
+                showToast("Đã xóa mã giảm giá.", "success");
+                loadAdminCoupons();
+            } catch (e) {}
+        }
+
+        // ==================== REVIEWS PANEL ====================
+        async function loadAdminReviews() {
+            try {
+                const reviews = await apiFetch("/reviews");
+                renderAdminReviews(reviews);
+            } catch (e) {}
+        }
+
+        function renderAdminReviews(reviews) {
+            const list = document.getElementById("admin-reviews-list");
+            list.innerHTML = "";
+            if (!reviews || reviews.length === 0) {
+                list.innerHTML = `<tr><td colspan="6" style="text-align:center; color:var(--text-secondary);">Không có đánh giá nào.</td></tr>`;
+                return;
+            }
+            reviews.forEach(rv => {
+                let stars = "";
+                for (let i = 1; i <= 5; i++) {
+                    stars += i <= rv.rating ? "⭐" : "☆";
+                }
+
+                const tr = document.createElement("tr");
+                tr.innerHTML = `
+                    <td>
+                        <div style="display:flex; align-items:center; gap:0.5rem;">
+                            <img src="${rv.food.imageUrl || defaultFoodImage}" style="width:36px; height:36px; border-radius:4px; object-fit:cover;">
+                            <div>
+                                <div style="font-weight:600;">${rv.food.name}</div>
+                                <div style="font-size:0.75rem; color:var(--text-muted);">ID món: #${rv.food.id}</div>
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <div style="font-weight:600;">${rv.user.fullName}</div>
+                        <div style="font-size:0.8rem; color:var(--text-secondary);">${rv.user.email}</div>
+                    </td>
+                    <td style="color:var(--accent-gold); font-size:1rem;"><strong>${stars}</strong></td>
+                    <td style="max-width:250px; font-size:0.9rem; line-height:1.4;">${rv.comment || '<em style="color:var(--text-muted);">Không viết bình luận</em>'}</td>
+                    <td style="font-size:0.85rem; color:var(--text-secondary);">${formatDate(rv.createdAt)}</td>
+                    <td style="text-align:right;">
+                        <button class="btn btn-danger btn-sm" onclick="deleteReviewAdmin(${rv.id})" style="padding:0.3rem 0.6rem; font-size:0.8rem;">Xóa</button>
+                    </td>
+                `;
+                list.appendChild(tr);
+            });
+        }
+
+        async function deleteReviewAdmin(id) {
+            if (!confirm("Bạn muốn xóa đánh giá này vĩnh viễn?")) return;
+            try {
+                await apiFetch(`/reviews/${id}`, { method: "DELETE" });
+                showToast("Đã xóa đánh giá thành công.", "success");
+                loadAdminReviews();
+            } catch (e) {}
+        }
+    </script>
+</body>
+</html>

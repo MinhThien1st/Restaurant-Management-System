@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Đăng Ký Thành Viên — HUIT Restaurant</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+    <!-- Header Navigation -->
+    <header>
+        <div class="nav-container">
+            <a href="index.html" class="logo">
+                <i data-lucide="utensils"></i> HUIT Restaurant
+            </a>
+            <ul class="nav-links" id="nav-links">
+                <li><a href="index.html">Trang Chủ</a></li>
+                <li><a href="menu.html">Thực Đơn</a></li>
+            </ul>
+            <div class="nav-actions" id="nav-actions"></div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container">
+        <div class="auth-wrapper">
+            <div class="card">
+                <div class="auth-header">
+                    <h1>Đăng Ký</h1>
+                    <p>Khám phá ưu đãi ẩm thực đặc quyền thành viên</p>
+                </div>
+                
+                <form id="register-form">
+                    <div class="form-group">
+                        <label for="fullName">Họ và Tên</label>
+                        <input type="text" id="fullName" class="form-control" required placeholder="Nguyễn Văn A">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" id="email" class="form-control" required placeholder="yourname@gmail.com">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="phone">Số điện thoại</label>
+                        <input type="tel" id="phone" class="form-control" required placeholder="0901234567">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="password">Mật khẩu (tối thiểu 6 ký tự)</label>
+                        <input type="password" id="password" class="form-control" required placeholder="••••••" minlength="6">
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary" style="width: 100%; justify-content: center; margin-top: 1rem;">
+                        Tạo Tài Khoản
+                    </button>
+                </form>
+                
+                <div class="auth-footer">
+                    Đã có tài khoản? <a href="login.html">Đăng nhập</a>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="js/app.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            if (localStorage.getItem("token")) {
+                window.location.href = "index.html";
+            }
+
+            const form = document.getElementById("register-form");
+            form.addEventListener("submit", async (e) => {
+                e.preventDefault();
+                
+                const fullName = document.getElementById("fullName").value;
+                const email = document.getElementById("email").value;
+                const phone = document.getElementById("phone").value;
+                const password = document.getElementById("password").value;
+
+                try {
+                    const response = await fetch("http://localhost:8080/api/auth/register", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify({ fullName, email, phone, password, role: "USER" })
+                    });
+
+                    const data = await response.json();
+
+                    if (!response.ok) {
+                        throw new Error(data.message || "Không thể tạo tài khoản. Email đã tồn tại.");
+                    }
+
+                    showToast("Tạo tài khoản thành công! Hãy đăng nhập.", "success");
+
+                    setTimeout(() => {
+                        window.location.href = "login.html";
+                    }, 1500);
+
+                } catch (error) {
+                    showToast(error.message, "error");
+                }
+            });
+        });
+    </script>
+</body>
+</html>

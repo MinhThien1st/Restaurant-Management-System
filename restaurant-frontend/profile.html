@@ -1,0 +1,709 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hồ Sơ Của Tôi — HUIT Restaurant</title>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        /* PROFILE SPECIFIC PREMIUM STYLES */
+        .profile-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem 1.5rem;
+        }
+
+        .profile-header-section {
+            margin-bottom: 2.5rem;
+            animation: slideInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .profile-header-title {
+            font-size: 2.2rem;
+            font-weight: 800;
+            background: var(--accent-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 0.5rem;
+            display: inline-block;
+        }
+
+        .profile-header-subtitle {
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+        }
+
+        .profile-grid {
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            gap: 2.5rem;
+            align-items: start;
+            animation: slideInUp 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .profile-sidebar {
+            background: var(--bg-surface);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            padding: 2.5rem 2rem;
+            box-shadow: var(--shadow-md);
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .profile-sidebar:hover {
+            box-shadow: var(--shadow-lg);
+            border-color: rgba(255, 94, 44, 0.15);
+        }
+
+        /* Avatar Container with Upload Overlay */
+        .avatar-container {
+            position: relative;
+            width: 120px;
+            height: 120px;
+            margin: 0 auto 1.5rem auto;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 4px solid white;
+            box-shadow: 0 8px 20px rgba(255, 94, 44, 0.15);
+            background: var(--bg-base);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .avatar-container:hover {
+            transform: scale(1.05);
+            box-shadow: 0 12px 25px rgba(255, 94, 44, 0.25);
+        }
+
+        .avatar-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
+        }
+
+        .avatar-placeholder {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background: var(--accent-gradient);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3.5rem;
+            font-weight: 800;
+        }
+
+        .avatar-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            gap: 0.25rem;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .avatar-container:hover .avatar-overlay {
+            opacity: 1;
+        }
+
+        .avatar-loader {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.85);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .avatar-loader.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        /* Spinner */
+        .spinner {
+            width: 24px;
+            height: 24px;
+            border: 3px solid rgba(255, 94, 44, 0.1);
+            border-top: 3px solid var(--accent-orange);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .role-badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 30px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 1.5rem;
+        }
+
+        .role-badge.user {
+            background-color: #eff6ff;
+            color: #2563eb;
+        }
+
+        .role-badge.admin {
+            background-color: #fef2f2;
+            color: #dc2626;
+        }
+
+        .profile-nav-btn {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            width: 100%;
+            padding: 0.85rem 1.15rem;
+            background: transparent;
+            border: none;
+            border-radius: var(--radius-md);
+            text-align: left;
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            margin-bottom: 0.5rem;
+        }
+
+        .profile-nav-btn:hover {
+            background: rgba(255, 94, 44, 0.04);
+            color: var(--text-primary);
+            padding-left: 1.35rem;
+        }
+
+        .profile-nav-btn.active {
+            background: linear-gradient(135deg, #fff5f0 0%, #ffe6d5 100%);
+            color: var(--accent-orange);
+            padding-left: 1.35rem;
+        }
+
+        /* Content Card */
+        .profile-content-card {
+            background: var(--bg-surface);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            padding: 3rem;
+            box-shadow: var(--shadow-md);
+            transition: all 0.3s ease;
+            min-height: 500px;
+        }
+
+        .profile-content-card:hover {
+            box-shadow: var(--shadow-lg);
+        }
+
+        .profile-tab-content {
+            display: none;
+            animation: fadeInTab 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .profile-tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeInTab {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .tab-title {
+            font-size: 1.6rem;
+            font-weight: 800;
+            color: var(--text-primary);
+            margin-bottom: 2rem;
+            position: relative;
+            display: inline-block;
+        }
+
+        .tab-title::after {
+            content: '';
+            position: absolute;
+            bottom: -6px;
+            left: 0;
+            width: 40px;
+            height: 3px;
+            background: var(--accent-gradient);
+            border-radius: 10px;
+        }
+
+        /* Form styling */
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-bottom: 1.5rem;
+        }
+
+        @media (max-width: 768px) {
+            .form-row {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+            .profile-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .form-group label {
+            font-size: 0.88rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+        }
+
+        .form-group input {
+            padding: 0.8rem 1.1rem;
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            font-family: var(--font-sans);
+            font-size: 0.95rem;
+            color: var(--text-primary);
+            background: var(--bg-surface);
+            transition: all 0.3s ease;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--accent-orange);
+            box-shadow: 0 0 0 4px rgba(255, 94, 44, 0.1);
+        }
+
+        /* Reservation Card Items */
+        .reservation-item {
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            padding: 1.5rem;
+            margin-bottom: 1.25rem;
+            background: var(--bg-surface);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .reservation-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: transparent;
+        }
+
+        .reservation-item.pending::before { background: var(--color-warning); }
+        .reservation-item.confirmed::before { background: var(--color-success); }
+        .reservation-item.cancelled::before { background: var(--color-danger); }
+
+        .reservation-item:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+            border-color: rgba(255, 94, 44, 0.15);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header Navigation -->
+    <header>
+        <div class="nav-container">
+            <a href="index.html" class="logo">
+                <i data-lucide="utensils"></i> HUIT Restaurant
+            </a>
+            <ul class="nav-links" id="nav-links">
+                <li><a href="index.html">Trang Chủ</a></li>
+                <li><a href="menu.html">Thực Đơn</a></li>
+            </ul>
+            <div class="nav-actions" id="nav-actions"></div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container" style="min-height: 75vh; padding-bottom: 4rem; padding-top: 2rem;">
+        <div class="profile-container">
+            
+            <div class="profile-header-section">
+                <h1 class="profile-header-title">Hồ Sơ Cá Nhân</h1>
+                <p class="profile-header-subtitle">Quản lý thông tin tài khoản, mật khẩu và lịch đặt bàn của bạn tại HUIT Restaurant.</p>
+            </div>
+
+            <div class="profile-grid">
+                
+                <!-- Sidebar -->
+                <div class="profile-sidebar">
+                    <div class="avatar-container" onclick="triggerAvatarUpload()">
+                        <img src="" id="profile-avatar-img" class="avatar-image" alt="Avatar" style="display: none;">
+                        <div class="avatar-placeholder" id="profile-avatar-placeholder">U</div>
+                        <div class="avatar-overlay">
+                            <i data-lucide="camera" style="width: 20px; height: 20px;"></i>
+                            <span>Tải ảnh lên</span>
+                        </div>
+                        <div class="avatar-loader" id="avatar-loader">
+                            <div class="spinner"></div>
+                        </div>
+                    </div>
+                    <!-- Hidden file input -->
+                    <input type="file" id="avatar-file-input" accept="image/*" style="display: none;" onchange="uploadAvatar(event)">
+
+                    <h3 style="font-weight: 700; margin-bottom: 0.25rem;" id="sidebar-name">Đang tải...</h3>
+                    <span class="role-badge user" id="sidebar-role">USER</span>
+                    
+                    <hr style="border: 0; border-top: 1px solid var(--border-color); margin-bottom: 1.5rem;">
+                    
+                    <button class="profile-nav-btn active" onclick="switchTab('profile-info', this)">
+                        <i data-lucide="user" style="width: 18px; height: 18px;"></i> Thông Tin Cá Nhân
+                    </button>
+                    <button class="profile-nav-btn" onclick="switchTab('change-password', this)">
+                        <i data-lucide="key-round" style="width: 18px; height: 18px;"></i> Đổi Mật Khẩu
+                    </button>
+                    <button class="profile-nav-btn" onclick="switchTab('my-reservations', this)">
+                        <i data-lucide="calendar" style="width: 18px; height: 18px;"></i> Lịch Đặt Bàn
+                    </button>
+                </div>
+
+                <!-- Content Card -->
+                <div class="profile-content-card">
+                    
+                    <!-- Tab 1: Profile Info -->
+                    <div id="profile-info" class="profile-tab-content active">
+                        <h2 class="tab-title">Thông Tin Cá Nhân</h2>
+                        <form id="profile-form" onsubmit="updateProfile(event)">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="profile-fullName">Họ và Tên</label>
+                                    <input type="text" id="profile-fullName" required placeholder="Nhập họ và tên">
+                                </div>
+                                <div class="form-group">
+                                    <label for="profile-phone">Số Điện Thoại</label>
+                                    <input type="text" id="profile-phone" required placeholder="Nhập số điện thoại">
+                                </div>
+                            </div>
+                            <div class="form-group" style="margin-bottom: 1.5rem;">
+                                <label for="profile-email">Địa Chỉ Email</label>
+                                <input type="email" id="profile-email" disabled style="background-color: #f3f4f6; cursor: not-allowed;">
+                            </div>
+                            <div style="font-size: 0.88rem; color: var(--text-secondary); margin-bottom: 2rem; display: flex; align-items: center; gap: 0.4rem;">
+                                <i data-lucide="calendar-days" style="width: 16px; height: 16px; color: var(--text-muted);"></i>
+                                Ngày tham gia: <strong id="profile-joinDate" style="color: var(--text-primary);">--/--/----</strong>
+                            </div>
+                            <button type="submit" class="btn btn-primary" style="padding: 0.8rem 2.2rem; font-weight: 700; border-radius: var(--radius-md);">Lưu Thay Đổi</button>
+                        </form>
+                    </div>
+
+                    <!-- Tab 2: Change Password -->
+                    <div id="change-password" class="profile-tab-content">
+                        <h2 class="tab-title">Thay Đổi Mật Khẩu</h2>
+                        <form id="password-form" onsubmit="changePassword(event)">
+                            <div class="form-group" style="margin-bottom: 1.25rem;">
+                                <label for="old-password">Mật Khẩu Hiện Tại</label>
+                                <input type="password" id="old-password" required placeholder="Nhập mật khẩu hiện tại">
+                            </div>
+                            <div class="form-group" style="margin-bottom: 1.25rem;">
+                                <label for="new-password">Mật Khẩu Mới</label>
+                                <input type="password" id="new-password" required placeholder="Tối thiểu 6 ký tự">
+                            </div>
+                            <div class="form-group" style="margin-bottom: 2rem;">
+                                <label for="confirm-password">Xác Nhận Mật Khẩu Mới</label>
+                                <input type="password" id="confirm-password" required placeholder="Nhập lại mật khẩu mới">
+                            </div>
+                            <button type="submit" class="btn btn-primary" style="padding: 0.8rem 2.2rem; font-weight: 700; border-radius: var(--radius-md);">Đổi Mật Khẩu</button>
+                        </form>
+                    </div>
+
+                    <!-- Tab 3: My Reservations -->
+                    <div id="my-reservations" class="profile-tab-content">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+                            <h2 class="tab-title" style="margin: 0;">Lịch Đặt Bàn Trước</h2>
+                            <a href="index.html#reservation-section" class="btn btn-primary btn-sm" style="border-radius: var(--radius-md);">Đặt Bàn Mới</a>
+                        </div>
+                        <div id="reservations-list">
+                            <div style="text-align: center; padding: 2rem; color: var(--text-secondary);">Đang tải thông tin đặt bàn...</div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container" style="max-width: 1200px; margin: 0 auto; min-height: auto; padding: 0 2rem;">
+            <p style="margin-bottom: 1rem; font-weight: 600;">🍽️ HUIT Restaurant © 2026</p>
+            <p style="font-size: 0.85rem; color: var(--text-muted);">Địa chỉ: 140 Lê Trọng Tấn, Tây Thạnh, Tân Phú, TP. HCM</p>
+        </div>
+    </footer>
+
+    <script src="js/app.js"></script>
+    <script>
+        let currentUser = null;
+
+        document.addEventListener("DOMContentLoaded", () => {
+            const token = localStorage.getItem("token");
+            if (!token) {
+                window.location.href = "login.html";
+                return;
+            }
+            loadProfile();
+        });
+
+        function switchTab(tabId, btn) {
+            document.querySelectorAll('.profile-tab-content').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.profile-nav-btn').forEach(el => el.classList.remove('active'));
+            
+            document.getElementById(tabId).classList.add('active');
+            btn.classList.add('active');
+
+            if (tabId === 'my-reservations') {
+                loadMyReservations();
+            }
+        }
+
+        async function loadProfile() {
+            try {
+                currentUser = await apiFetch("/users/me");
+                if (currentUser) {
+                    // Update UI
+                    document.getElementById("sidebar-name").textContent = currentUser.fullName;
+                    document.getElementById("sidebar-role").textContent = currentUser.role === "ADMIN" ? "Quản Trị Viên" : "Khách Hàng";
+                    document.getElementById("sidebar-role").className = `role-badge ${currentUser.role === 'ADMIN' ? 'admin' : 'user'}`;
+
+                    // Update Avatar
+                    const avatarImg = document.getElementById("profile-avatar-img");
+                    const avatarPlaceholder = document.getElementById("profile-avatar-placeholder");
+                    if (currentUser.avatarUrl) {
+                        avatarImg.src = currentUser.avatarUrl;
+                        avatarImg.style.display = "block";
+                        avatarPlaceholder.style.display = "none";
+                    } else {
+                        avatarImg.style.display = "none";
+                        avatarPlaceholder.style.display = "flex";
+                        avatarPlaceholder.textContent = currentUser.fullName.charAt(0).toUpperCase();
+                    }
+
+                    document.getElementById("profile-fullName").value = currentUser.fullName;
+                    document.getElementById("profile-phone").value = currentUser.phone || "";
+                    document.getElementById("profile-email").value = currentUser.email;
+                    
+                    const joinDate = new Date(currentUser.createdAt);
+                    document.getElementById("profile-joinDate").textContent = `${joinDate.getDate()}/${joinDate.getMonth() + 1}/${joinDate.getFullYear()}`;
+                }
+            } catch (e) {
+                console.error("loadProfile error:", e);
+                // Handle case where user does not exist (seeded again / deleted)
+                if (e.message && (e.message.includes("User not found") || e.message.includes("not found"))) {
+                    showToast("Tài khoản không tồn tại trên hệ thống. Tự động đăng xuất...", "error");
+                    setTimeout(() => {
+                        localStorage.removeItem("token");
+                        localStorage.removeItem("user");
+                        window.location.href = "login.html";
+                    }, 2000);
+                } else {
+                    showToast("Không thể tải thông tin hồ sơ.", "error");
+                }
+            }
+        }
+
+        function triggerAvatarUpload() {
+            document.getElementById("avatar-file-input").click();
+        }
+
+        async function uploadAvatar(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            // Validate file is image
+            if (!file.type.startsWith("image/")) {
+                showToast("Vui lòng chọn một tệp ảnh hợp lệ.", "error");
+                return;
+            }
+
+            // Show spinner loader
+            const loader = document.getElementById("avatar-loader");
+            loader.classList.add("active");
+
+            const formData = new FormData();
+            formData.append("file", file);
+
+            try {
+                // 1. Upload the file to the Spring Boot upload controller
+                const token = localStorage.getItem("token");
+                const response = await fetch("http://localhost:8080/api/upload", {
+                    method: "POST",
+                    headers: {
+                        "Authorization": `Bearer ${token}`
+                    },
+                    body: formData
+                });
+
+                if (!response.ok) {
+                    const err = await response.json();
+                    throw new Error(err.message || "Tải lên ảnh thất bại.");
+                }
+
+                const data = await response.json();
+                const newAvatarUrl = data.imageUrl; // Relative URL e.g. "images/upload_xxxx.jpg"
+
+                // 2. Call PUT /api/users/{id} to save the new avatar URL
+                const updated = await apiFetch(`/users/${currentUser.id}`, {
+                    method: "PUT",
+                    body: JSON.stringify({ avatarUrl: newAvatarUrl })
+                });
+
+                if (updated) {
+                    showToast("Cập nhật ảnh đại diện thành công!", "success");
+                    // Sync localStorage
+                    localStorage.setItem("user", JSON.stringify(updated));
+                    // Refresh profile interface
+                    loadProfile();
+                    // Refresh navbar
+                    initNavbar();
+                }
+            } catch (err) {
+                console.error("Upload avatar error:", err);
+                showToast(err.message || "Lỗi khi tải ảnh đại diện.", "error");
+            } finally {
+                loader.classList.remove("active");
+                // Clear input value so it can trigger change again for same file
+                document.getElementById("avatar-file-input").value = "";
+            }
+        }
+
+        async function updateProfile(e) {
+            e.preventDefault();
+            const fullName = document.getElementById("profile-fullName").value;
+            const phone = document.getElementById("profile-phone").value;
+
+            try {
+                const updated = await apiFetch(`/users/${currentUser.id}`, {
+                    method: "PUT",
+                    body: JSON.stringify({ fullName, phone })
+                });
+
+                if (updated) {
+                    showToast("Đã cập nhật thông tin thành công!", "success");
+                    localStorage.setItem("user", JSON.stringify(updated));
+                    loadProfile();
+                    initNavbar();
+                }
+            } catch (e) {
+                // apiFetch already toasts errors
+            }
+        }
+
+        async function changePassword(e) {
+            e.preventDefault();
+            const oldPassword = document.getElementById("old-password").value;
+            const newPassword = document.getElementById("new-password").value;
+            const confirmPassword = document.getElementById("confirm-password").value;
+
+            if (newPassword !== confirmPassword) {
+                showToast("Mật khẩu xác nhận không khớp.", "error");
+                return;
+            }
+
+            try {
+                const response = await apiFetch(`/users/${currentUser.id}/password`, {
+                    method: "PUT",
+                    body: JSON.stringify({ oldPassword, newPassword })
+                });
+
+                if (response) {
+                    showToast("Đã đổi mật khẩu thành công!", "success");
+                    document.getElementById("password-form").reset();
+                }
+            } catch (e) {
+                // apiFetch handled
+            }
+        }
+
+        async function loadMyReservations() {
+            const listContainer = document.getElementById("reservations-list");
+            listContainer.innerHTML = '<div style="text-align: center; padding: 2rem; color: var(--text-secondary);">Đang tải...</div>';
+
+            try {
+                const reservations = await apiFetch("/reservations/my");
+                listContainer.innerHTML = "";
+
+                if (!reservations || reservations.length === 0) {
+                    listContainer.innerHTML = `
+                        <div style="text-align: center; padding: 3rem 1rem; color: var(--text-secondary);">
+                            <div style="font-size: 2.5rem; margin-bottom: 0.5rem;">📅</div>
+                            <p>Bạn chưa có lịch đặt bàn nào.</p>
+                        </div>
+                    `;
+                    return;
+                }
+
+                reservations.forEach(res => {
+                    let statusLabel = "Đang chờ";
+                    let statusClass = "status-pending";
+                    let itemClass = "pending";
+                    if (res.status === "CONFIRMED") {
+                        statusLabel = "Đã xác nhận";
+                        statusClass = "status-completed";
+                        itemClass = "confirmed";
+                    } else if (res.status === "CANCELLED") {
+                        statusLabel = "Đã hủy";
+                        statusClass = "status-cancelled";
+                        itemClass = "cancelled";
+                    }
+
+                    const item = document.createElement("div");
+                    item.className = `reservation-item ${itemClass}`;
+                    item.innerHTML = `
+                        <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 0.75rem;">
+                            <div>
+                                <span style="font-weight: 700; font-size: 1.05rem;">Khách đặt: ${res.customerName}</span>
+                                <span style="margin-left: 0.75rem; font-size: 0.85rem; color: var(--text-secondary);">🕒 Đặt lúc: ${formatDate(res.createdAt)}</span>
+                            </div>
+                            <span class="status-badge ${statusClass}">${statusLabel}</span>
+                        </div>
+                        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; font-size: 0.92rem; color: var(--text-secondary); margin-bottom: 0.5rem;">
+                            <div>📅 Ngày: <strong style="color: var(--text-primary);">${res.reserveDate}</strong></div>
+                            <div>⏰ Giờ: <strong style="color: var(--text-primary);">${res.reserveTime}</strong></div>
+                            <div>👥 Số người: <strong style="color: var(--text-primary);">${res.numGuests}</strong></div>
+                        </div>
+                        ${res.note ? `<div style="font-size: 0.9rem; color: var(--text-secondary); background: #f9fafb; padding: 0.5rem; border-radius: 4px; border-left: 3px solid #ddd; margin-top: 0.5rem;">Ghi chú: ${res.note}</div>` : ''}
+                    `;
+                    listContainer.appendChild(item);
+                });
+            } catch (e) {
+                listContainer.innerHTML = '<div style="text-align: center; padding: 2rem; color: var(--color-danger);">Không thể tải thông tin đặt bàn.</div>';
+            }
+        }
+    </script>
+</body>
+</html>

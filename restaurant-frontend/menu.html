@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thực Đơn — HUIT Restaurant</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+    <!-- Header Navigation -->
+    <header>
+        <div class="nav-container">
+            <a href="index.html" class="logo">
+                <i data-lucide="utensils"></i> HUIT Restaurant
+            </a>
+            <ul class="nav-links" id="nav-links">
+                <li><a href="index.html">Trang Chủ</a></li>
+                <li><a href="menu.html" class="active">Thực Đơn</a></li>
+            </ul>
+            <div class="nav-actions" id="nav-actions"></div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container">
+        <div class="menu-header">
+            <h1>Thực Đơn Hôm Nay</h1>
+            <div class="search-bar">
+                <input type="text" id="search-input" class="form-control" placeholder="Tìm kiếm món ăn...">
+                <button id="search-btn" class="btn btn-primary" style="gap: 0.4rem;">
+                    Tìm <i data-lucide="search" style="width: 14px; height: 14px;"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Category Tabs -->
+        <div class="category-tabs" id="category-tabs">
+            <button class="category-tab active" data-id="all">Tất cả</button>
+            <!-- Dynamic Category Tabs -->
+        </div>
+
+        <!-- Foods Grid -->
+        <div class="foods-grid" id="foods-grid">
+            <!-- Dynamic Foods Cards -->
+            <div style="grid-column: 1/-1; text-align: center; padding: 3rem; color: var(--text-secondary);">
+                Đang tải món ăn...
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container" style="max-width: 1200px; margin: 0 auto; min-height: auto; padding: 0 2rem;">
+            <p style="margin-bottom: 1rem; font-weight: 600;">🍽️ HUIT Restaurant © 2026</p>
+            <p style="font-size: 0.85rem; color: var(--text-muted);">Địa chỉ: 140 Lê Trọng Tấn, Tây Thạnh, Tân Phú, TP. HCM</p>
+        </div>
+    </footer>
+
+    <script src="js/app.js"></script>
+    <script>
+        let selectedCategoryId = "all";
+        let searchQuery = "";
+
+        const defaultFoodImage = "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?q=80&w=400&auto=format&fit=crop";
+
+        document.addEventListener("DOMContentLoaded", () => {
+            // Read query parameters
+            const urlParams = new URLSearchParams(window.location.search);
+            const catParam = urlParams.get('category');
+            if (catParam) {
+                selectedCategoryId = catParam;
+            }
+
+            loadCategories();
+            loadFoods();
+
+            // Search input actions
+            const searchBtn = document.getElementById("search-btn");
+            const searchInput = document.getElementById("search-input");
+            
+            searchBtn.addEventListener("click", () => {
+                searchQuery = searchInput.value.trim();
+                loadFoods();
+            });
+
+            searchInput.addEventListener("keypress", (e) => {
+                if (e.key === "Enter") {
+                    searchQuery = searchInput.value.trim();
+                    loadFoods();
+                }
+            });
+        });
+
+        async function loadCategories() {
+            try {
+                const categories = await apiFetch("/categories");
+                const tabsContainer = document.getElementById("category-tabs");
+                
+                // Clear and recreate tabs
+                tabsContainer.innerHTML = `<button class="category-tab ${selectedCategoryId === 'all' ? 'active' : ''}" data-id="all">Tất cả</button>`;
+                
+                categories.forEach(cat => {
+                    const tab = document.createElement("button");
+                    const isTabActive = selectedCategoryId.toString() === cat.id.toString();
+                    tab.className = `category-tab ${isTabActive ? 'active' : ''}`;
+                    tab.textContent = cat.name;
+                    tab.dataset.id = cat.id;
+                    
+                    tab.addEventListener("click", (e) => {
+                        // Reset active classes
+                        document.querySelectorAll(".category-tab").forEach(t => t.classList.remove("active"));
+                        tab.classList.add("active");
+                        
+                        selectedCategoryId = cat.id;
+                        loadFoods();
+                    });
+
+                    tabsContainer.appendChild(tab);
+                });
+
+                // Add click listener for 'All' tab
+                const allTab = document.querySelector(".category-tab[data-id='all']");
+                allTab.addEventListener("click", () => {
+                    document.querySelectorAll(".category-tab").forEach(t => t.classList.remove("active"));
+                    allTab.classList.add("active");
+                    selectedCategoryId = "all";
+                    loadFoods();
+                });
+
+            } catch (error) {
+                console.error("Error loading categories", error);
+            }
+        }
+
+        async function loadFoods() {
+            const grid = document.getElementById("foods-grid");
+            grid.innerHTML = `<div style="grid-column: 1/-1; text-align: center; padding: 3rem; color: var(--text-secondary);">Đang tìm món ăn...</div>`;
+
+            try {
+                let url = "/foods/search?";
+                if (searchQuery) url += `name=${encodeURIComponent(searchQuery)}&`;
+                if (selectedCategoryId !== "all") url += `categoryId=${selectedCategoryId}`;
+                
+                const foods = await apiFetch(url);
+                grid.innerHTML = "";
+
+                if (foods.length === 0) {
+                    grid.innerHTML = `
+                        <div style="grid-column: 1/-1; text-align: center; padding: 4rem; color: var(--text-secondary);">
+                            <div style="margin-bottom: 1.25rem; display: flex; justify-content: center;">
+                                <i data-lucide="search" style="width: 48px; height: 48px; color: var(--text-muted);"></i>
+                            </div>
+                            <p>Không tìm thấy món ăn nào phù hợp.</p>
+                        </div>
+                    `;
+                    if (typeof lucide !== 'undefined') {
+                        lucide.createIcons();
+                    }
+                    return;
+                }
+
+                // Fetch ratings for each food in parallel
+                const ratingPromises = foods.map(async food => {
+                    try {
+                        const reviews = await apiFetch(`/reviews/food/${food.id}`);
+                        const count = reviews.length;
+                        let avg = 0;
+                        if (count > 0) {
+                            const sum = reviews.reduce((s, r) => s + r.rating, 0);
+                            avg = (sum / count).toFixed(1);
+                        }
+                        return { id: food.id, avg, count };
+                    } catch (e) {
+                        return { id: food.id, avg: 0, count: 0 };
+                    }
+                });
+                
+                const ratings = await Promise.all(ratingPromises);
+                const ratingsMap = ratings.reduce((map, r) => {
+                    map[r.id] = r;
+                    return map;
+                }, {});
+
+                foods.forEach(food => {
+                    const card = document.createElement("div");
+                    card.className = "card food-card";
+                    
+                    const imgUrl = food.imageUrl && food.imageUrl.trim() !== "" ? food.imageUrl : defaultFoodImage;
+                    const catName = food.category ? food.category.name : "Món ăn";
+                    const ratingInfo = ratingsMap[food.id];
+
+                    card.innerHTML = `
+                        <div class="food-img-wrapper" style="cursor: pointer;" onclick="showFoodDetails(${food.id})">
+                            <img src="${imgUrl}" alt="${food.name}">
+                            <span class="food-badge">${catName}</span>
+                        </div>
+                        <div class="food-info">
+                            <h3 class="food-title" style="cursor: pointer;" onclick="showFoodDetails(${food.id})">${food.name}</h3>
+                            <div style="display:flex; align-items:center; gap:0.25rem; font-size:0.82rem; margin-bottom: 0.6rem;">
+                                <span style="color:var(--accent-gold); font-size:1.1rem;">★</span>
+                                <strong style="color:var(--text-primary);">${ratingInfo.count > 0 ? ratingInfo.avg : '5.0'}</strong>
+                                <span style="color:var(--text-muted);">(${ratingInfo.count} đánh giá)</span>
+                            </div>
+                            <p class="food-desc" title="${food.description || ''}">${food.description || 'Hương vị thơm ngon khó cưỡng đặc trưng của nhà hàng.'}</p>
+                            <div class="food-footer">
+                                <div class="food-price">${formatCurrency(food.price)}</div>
+                                <button onclick="addToCart(${food.id})" class="btn btn-primary btn-sm" style="gap: 0.3rem; display: inline-flex; align-items: center;">
+                                    <i data-lucide="shopping-cart" style="width: 14px; height: 14px;"></i> Thêm
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                    grid.appendChild(card);
+                });
+
+                if (typeof lucide !== 'undefined') {
+                    lucide.createIcons();
+                }
+            } catch (error) {
+                grid.innerHTML = `<div style="grid-column: 1/-1; text-align: center; padding: 3rem; color: var(--color-danger);">Không thể kết nối máy chủ để lấy thực đơn.</div>`;
+            }
+        }
+
+        async function addToCart(foodId) {
+            const token = localStorage.getItem("token");
+            if (!token) {
+                showToast("Bạn cần đăng nhập để thêm vào giỏ hàng.", "warning");
+                setTimeout(() => {
+                    window.location.href = "login.html";
+                }, 1000);
+                return;
+            }
+
+            // Verify if user is admin
+            const user = JSON.parse(localStorage.getItem("user"));
+            if (user && user.role === "ADMIN") {
+                showToast("Tài khoản ADMIN không dùng chức năng giỏ hàng.", "warning");
+                return;
+            }
+
+            try {
+                await apiFetch("/cart", {
+                    method: "POST",
+                    body: JSON.stringify({ foodId: foodId, quantity: 1 })
+                });
+
+                showToast("Đã thêm món vào giỏ hàng!", "success");
+                updateCartBadge();
+            } catch (error) {
+                // Toast already shown in apiFetch
+            }
+        }
+    </script>
+</body>
+</html>

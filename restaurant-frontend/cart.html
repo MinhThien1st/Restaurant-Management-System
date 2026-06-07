@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Giỏ Hàng — HUIT Restaurant</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+    <!-- Header Navigation -->
+    <header>
+        <div class="nav-container">
+            <a href="index.html" class="logo">
+                <span>🍽️</span> HUIT Restaurant
+            </a>
+            <ul class="nav-links" id="nav-links">
+                <li><a href="index.html">Trang Chủ</a></li>
+                <li><a href="menu.html">Thực Đơn</a></li>
+            </ul>
+            <div class="nav-actions" id="nav-actions"></div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container">
+        <h1 class="cart-title">Giỏ Hàng Của Bạn</h1>
+        
+        <div class="cart-layout" id="cart-layout" style="display: none;">
+            <!-- Cart Items Section -->
+            <div>
+                <div class="cart-items-list" id="cart-items-list">
+                    <!-- Dynamic cart items -->
+                </div>
+                <div style="margin-top: 1.5rem; display: flex; justify-content: space-between;">
+                    <a href="menu.html" class="btn btn-secondary">← Tiếp tục mua món</a>
+                    <button onclick="clearCart()" class="btn btn-danger btn-sm">Xóa toàn bộ giỏ</button>
+                </div>
+            </div>
+
+            <!-- Summary & Checkout Section -->
+            <div class="card cart-summary">
+                <h2 style="font-size: 1.4rem; font-weight: 700; margin-bottom: 1.5rem;">Thông Tin Thanh Toán</h2>
+                
+                <div class="summary-row">
+                    <span>Tạm tính</span>
+                    <span id="summary-subtotal">0đ</span>
+                </div>
+                <div class="summary-row">
+                    <span>Phí vận chuyển</span>
+                    <span style="color: var(--color-success); font-weight: 600;">Miễn phí</span>
+                </div>
+
+                <!-- Coupon code input -->
+                <div style="margin: 1.5rem 0 1rem 0; border-top: 1px dashed var(--border-color); padding-top: 1.5rem;">
+                    <label for="coupon-input" style="font-size: 0.9rem; font-weight: 600; color: var(--text-secondary); display: block; margin-bottom: 0.5rem;">Mã giảm giá (Coupon)</label>
+                    <div style="display: flex; gap: 0.5rem;">
+                        <input type="text" id="coupon-input" class="form-control" placeholder="Nhập mã (ví dụ: SALE50)" style="margin: 0; padding: 0.5rem 0.75rem; text-transform: uppercase;">
+                        <button type="button" onclick="applyCouponCode()" class="btn btn-secondary" style="padding: 0.5rem 1rem; font-size: 0.9rem;">Áp dụng</button>
+                    </div>
+                    <div id="coupon-status-msg" style="font-size: 0.82rem; margin-top: 0.4rem; display: none;"></div>
+                </div>
+
+                <!-- Discount row -->
+                <div class="summary-row" id="summary-discount-row" style="display: none; color: var(--color-danger); font-weight: 600;">
+                    <span>Giảm giá (<span id="summary-discount-percent">0</span>%)</span>
+                    <span id="summary-discount-amount">-0đ</span>
+                </div>
+                
+                <div class="summary-row total">
+                    <span>Tổng tiền</span>
+                    <span id="summary-total">0đ</span>
+                </div>
+
+                <form id="checkout-form" style="margin-top: 2rem;">
+                    <h3 style="font-size: 1rem; font-weight: 600; margin-bottom: 1rem; color: var(--text-secondary);">Địa chỉ nhận hàng</h3>
+                    
+                    <div class="form-group">
+                        <label for="customerName">Tên người nhận</label>
+                        <input type="text" id="customerName" class="form-control" required placeholder="Tên khách hàng">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="phone">Số điện thoại liên hệ</label>
+                        <input type="tel" id="phone" class="form-control" required placeholder="SĐT giao hàng">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="address">Địa chỉ chi tiết</label>
+                        <input type="text" id="address" class="form-control" required placeholder="Số nhà, tên đường, phường, quận...">
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary" style="width: 100%; justify-content: center; margin-top: 1.5rem; font-size: 1.05rem;">
+                        Xác Nhận Đặt Đơn
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Empty Cart -->
+        <div id="empty-cart" style="text-align: center; padding: 5rem 2rem; display: none;">
+            <div style="font-size: 4rem; margin-bottom: 1.5rem;">🛒</div>
+            <h2 style="font-weight: 700; margin-bottom: 0.5rem;">Giỏ hàng của bạn đang trống</h2>
+            <p style="color: var(--text-secondary); margin-bottom: 2rem;">Hãy lấp đầy chiếc bụng đói của bạn bằng những món ngon từ HUIT Restaurant.</p>
+            <a href="menu.html" class="btn btn-primary">Xem Thực Đơn Ngay</a>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container" style="max-width: 1200px; margin: 0 auto; min-height: auto; padding: 0 2rem;">
+            <p style="margin-bottom: 1rem; font-weight: 600;">🍽️ HUIT Restaurant © 2026</p>
+            <p style="font-size: 0.85rem; color: var(--text-muted);">Địa chỉ: 140 Lê Trọng Tấn, Tây Thạnh, Tân Phú, TP. HCM</p>
+        </div>
+    </footer>
+
+    <script src="js/app.js"></script>
+    <script>
+        let currentCartItems = [];
+        const defaultFoodImage = "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?q=80&w=400&auto=format&fit=crop";
+
+        let appliedCouponCode = "";
+        let discountPercent = 0;
+        let discountAmount = 0;
+        let currentSubtotal = 0;
+
+        document.addEventListener("DOMContentLoaded", () => {
+            const token = localStorage.getItem("token");
+            if (!token) {
+                window.location.href = "login.html";
+                return;
+            }
+
+            // Autofill user name & phone if logged in
+            const userJson = localStorage.getItem("user");
+            if (userJson) {
+                const user = JSON.parse(userJson);
+                if (user.role === "ADMIN") {
+                    window.location.href = "admin.html";
+                    return;
+                }
+                document.getElementById("customerName").value = user.fullName || "";
+                document.getElementById("phone").value = user.phone || "";
+            }
+
+            loadCart();
+
+            // Checkout form action
+            const checkoutForm = document.getElementById("checkout-form");
+            checkoutForm.addEventListener("submit", handleCheckout);
+        });
+
+        async function loadCart() {
+            const layout = document.getElementById("cart-layout");
+            const empty = document.getElementById("empty-cart");
+            
+            try {
+                const cartItems = await apiFetch("/cart");
+                currentCartItems = cartItems;
+
+                if (!cartItems || cartItems.length === 0) {
+                    layout.style.display = "none";
+                    empty.style.display = "block";
+                    updateCartBadge();
+                    return;
+                }
+
+                empty.style.display = "none";
+                layout.style.display = "grid";
+
+                const listContainer = document.getElementById("cart-items-list");
+                listContainer.innerHTML = "";
+                
+                let subtotal = 0;
+
+                cartItems.forEach(item => {
+                    const food = item.food;
+                    const itemTotal = food.price * item.quantity;
+                    subtotal += itemTotal;
+
+                    const imgUrl = food.imageUrl && food.imageUrl.trim() !== "" ? food.imageUrl : defaultFoodImage;
+
+                    const cartItemEl = document.createElement("div");
+                    cartItemEl.className = "card cart-item";
+                    cartItemEl.innerHTML = `
+                        <img src="${imgUrl}" alt="${food.name}" class="cart-item-img">
+                        <div class="cart-item-details">
+                            <h3 class="cart-item-name">${food.name}</h3>
+                            <div class="cart-item-price">${formatCurrency(food.price)}</div>
+                        </div>
+                        <div class="cart-item-qty">
+                            <button onclick="updateQty(${item.id}, ${item.quantity - 1})" class="qty-btn">-</button>
+                            <span class="qty-val">${item.quantity}</span>
+                            <button onclick="updateQty(${item.id}, ${item.quantity + 1})" class="qty-btn">+</button>
+                        </div>
+                        <div class="cart-item-total">${formatCurrency(itemTotal)}</div>
+                        <button onclick="removeItem(${item.id})" style="background:none; border:none; color:var(--color-danger); cursor:pointer; font-size:1.25rem; padding: 0.5rem;" title="Xóa món">🗑️</button>
+                    `;
+                    listContainer.appendChild(cartItemEl);
+                });
+
+                currentSubtotal = subtotal;
+                document.getElementById("summary-subtotal").textContent = formatCurrency(subtotal);
+
+                if (appliedCouponCode) {
+                    try {
+                        const response = await apiFetch(`/coupons/validate?code=${appliedCouponCode}&amount=${currentSubtotal}`);
+                        if (response && response.valid) {
+                            discountPercent = response.discountPercent;
+                            discountAmount = response.discountAmount;
+                            document.getElementById("summary-discount-percent").textContent = response.discountPercent;
+                            document.getElementById("summary-discount-amount").textContent = "-" + formatCurrency(response.discountAmount);
+                            document.getElementById("summary-discount-row").style.display = "flex";
+                            
+                            const finalTotal = currentSubtotal - response.discountAmount;
+                            document.getElementById("summary-total").textContent = formatCurrency(finalTotal > 0 ? finalTotal : 0);
+                        }
+                    } catch (e) {
+                        // Coupon is no longer valid for the new subtotal
+                        appliedCouponCode = "";
+                        discountPercent = 0;
+                        discountAmount = 0;
+                        document.getElementById("coupon-input").value = "";
+                        document.getElementById("coupon-status-msg").style.display = "none";
+                        document.getElementById("summary-discount-row").style.display = "none";
+                        document.getElementById("summary-total").textContent = formatCurrency(currentSubtotal);
+                    }
+                } else {
+                    document.getElementById("summary-total").textContent = formatCurrency(subtotal);
+                }
+
+                updateCartBadge();
+
+            } catch (error) {
+                console.error("Error loading cart", error);
+            }
+        }
+
+        async function applyCouponCode() {
+            const input = document.getElementById("coupon-input");
+            const msg = document.getElementById("coupon-status-msg");
+            if (!input || !msg) return;
+
+            const code = input.value.trim().toUpperCase();
+            if (!code) {
+                showToast("Vui lòng nhập mã giảm giá.", "warning");
+                return;
+            }
+
+            try {
+                const response = await apiFetch(`/coupons/validate?code=${code}&amount=${currentSubtotal}`);
+                if (response && response.valid) {
+                    appliedCouponCode = response.code;
+                    discountPercent = response.discountPercent;
+                    discountAmount = response.discountAmount;
+
+                    msg.style.display = "block";
+                    msg.style.color = "var(--color-success)";
+                    msg.innerHTML = `✓ Áp dụng mã <strong>${response.code}</strong> thành công! Giảm ${formatCurrency(response.discountAmount)}.`;
+                    
+                    document.getElementById("summary-discount-row").style.display = "flex";
+                    document.getElementById("summary-discount-percent").textContent = response.discountPercent;
+                    document.getElementById("summary-discount-amount").textContent = "-" + formatCurrency(response.discountAmount);
+                    
+                    const finalTotal = currentSubtotal - response.discountAmount;
+                    document.getElementById("summary-total").textContent = formatCurrency(finalTotal > 0 ? finalTotal : 0);
+                    showToast("Áp dụng mã giảm giá thành công!", "success");
+                }
+            } catch (error) {
+                appliedCouponCode = "";
+                discountPercent = 0;
+                discountAmount = 0;
+                
+                msg.style.display = "block";
+                msg.style.color = "var(--color-danger)";
+                msg.textContent = error.message || "Mã giảm giá không hợp lệ hoặc đã hết hạn.";
+                
+                document.getElementById("summary-discount-row").style.display = "none";
+                document.getElementById("summary-total").textContent = formatCurrency(currentSubtotal);
+            }
+        }
+
+        async function updateQty(cartItemId, newQty) {
+            try {
+                await apiFetch(`/cart/${cartItemId}?quantity=${newQty}`, {
+                    method: "PUT"
+                });
+                loadCart();
+            } catch (e) {
+                // Error shown in apiFetch
+            }
+        }
+
+        async function removeItem(cartItemId) {
+            if (!confirm("Bạn muốn xóa món ăn này khỏi giỏ hàng?")) return;
+            try {
+                await apiFetch(`/cart/${cartItemId}`, {
+                    method: "DELETE"
+                });
+                showToast("Đã xóa món ăn.", "success");
+                loadCart();
+            } catch (e) {}
+        }
+
+        async function clearCart() {
+            if (!confirm("Bạn muốn xóa sạch toàn bộ giỏ hàng?")) return;
+            try {
+                await apiFetch("/cart", {
+                    method: "DELETE"
+                });
+                showToast("Đã làm trống giỏ hàng.", "success");
+                loadCart();
+            } catch (e) {}
+        }
+
+        async function handleCheckout(e) {
+            e.preventDefault();
+
+            const customerName = document.getElementById("customerName").value;
+            const phone = document.getElementById("phone").value;
+            const address = document.getElementById("address").value;
+
+            const items = currentCartItems.map(item => ({
+                foodId: item.food.id,
+                quantity: item.quantity
+            }));
+
+            try {
+                const response = await apiFetch("/orders", {
+                    method: "POST",
+                    body: JSON.stringify({
+                        customerName,
+                        phone,
+                        address,
+                        items,
+                        couponCode: appliedCouponCode || null
+                    })
+                });
+
+                if (response) {
+                    showToast("Đặt đơn hàng thành công! Đang chuyển hướng...", "success");
+                    setTimeout(() => {
+                        window.location.href = "orders.html";
+                    }, 1200);
+                }
+            } catch (error) {
+                // Error handled
+            }
+        }
+    </script>
+</body>
+</html>

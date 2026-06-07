@@ -1,0 +1,656 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HUIT Restaurant — Thiên Đường Ẩm Thực Đương Đại</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+    <!-- Scroll Progress Bar -->
+    <div class="scroll-progress" id="scroll-progress"></div>
+
+    <!-- Header Navigation -->
+    <header>
+        <div class="nav-container">
+            <a href="index.html" class="logo">
+                <i data-lucide="utensils"></i> HUIT Restaurant
+            </a>
+            <ul class="nav-links" id="nav-links">
+                <li><a href="index.html" id="nav-home" class="active">Trang Chủ</a></li>
+                <li><a href="menu.html" id="nav-menu">Thực Đơn</a></li>
+            </ul>
+            <div class="nav-actions" id="nav-actions">
+                <!-- Dynamic actions from app.js -->
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container">
+        <!-- 1. Hero Section -->
+        <section class="hero" style="position: relative; overflow: visible;">
+            <div class="hero-decoration hero-decoration-1"></div>
+            <div class="hero-decoration hero-decoration-2"></div>
+            <div class="hero-content">
+                <span
+                    style="display: inline-block; background: rgba(255, 94, 44, 0.08); color: var(--accent-orange); font-size: 0.82rem; font-weight: 700; padding: 0.35rem 0.95rem; border-radius: 20px; margin-bottom: 1.25rem; border: 1px solid rgba(255, 94, 44, 0.15);">
+                    ✨ Chuỗi Nhà Hàng Đạt Chuẩn 5 Sao
+                </span>
+                <h1>Thưởng thức tinh hoa <br><span>ẩm thực đương đại</span></h1>
+                <p>Khám phá menu phong phú từ nguồn nguyên liệu hữu cơ tươi sạch tuyển lựa mỗi ngày, chế biến nghệ thuật
+                    bởi các đầu bếp danh tiếng tại HUIT Restaurant.</p>
+                <div class="hero-btns">
+                    <a href="menu.html" class="btn btn-primary" style="gap: 0.4rem;">
+                        Khám Phá Thực Đơn <i data-lucide="arrow-right" style="width: 16px; height: 16px;"></i>
+                    </a>
+                    <a href="#reservation" class="btn btn-secondary" style="gap: 0.4rem;">
+                        Đặt Bàn Ngay <i data-lucide="calendar" style="width: 16px; height: 16px;"></i>
+                    </a>
+                </div>
+            </div>
+            <div class="hero-image">
+                <div class="hero-slider-wrapper">
+                    <div class="hero-slide active">
+                        <img src="images/com-tam-suon-bi-cha.jpg" alt="Cơm Tấm Sườn Bì Chả Đặc Biệt">
+                    </div>
+                    <div class="hero-slide">
+                        <img src="images/pho-bo-tai-nam.jpg" alt="Phở Bò Tái Nạm Hương Vị Truyền Thống">
+                    </div>
+                    <div class="hero-slide">
+                        <img src="images/bun-bo-hue.jpg" alt="Bún Bò Huế Cay Nồng Đậm Đà">
+                    </div>
+                    <div class="hero-slider-dots">
+                        <!-- Dots dynamically rendered by home.js -->
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 2. Promotions Section -->
+        <section style="margin-top: 6rem;" class="reveal">
+            <div style="text-align: center; margin-bottom: 3rem;">
+                <h2 class="section-title-wrapper reveal"
+                    style="font-size: 2.2rem; font-weight: 800; background: var(--accent-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; display: inline-block;">
+                    🎁 Ưu Đãi Đặc Biệt Trong Tháng
+                </h2>
+                <p style="color: var(--text-secondary); margin-top: 0.75rem; font-size: 1.05rem;">Những chương trình tri
+                    ân độc quyền dành riêng cho bạn</p>
+            </div>
+            <div class="promo-container stagger-children">
+                <!-- Promo 1 -->
+                <div class="promo-card reveal">
+                    <span class="promo-badge">GIẢM 20%</span>
+                    <div class="promo-icon">
+                        <span style="font-size: 2.8rem;">🎉</span>
+                    </div>
+                    <div class="promo-info">
+                        <h3>Thành viên mới</h3>
+                        <p>Đăng ký tài khoản và thưởng thức bữa tiệc đầu tiên tiết kiệm đến 20%.</p>
+                        <a href="register.html"
+                            style="font-weight: 700; color: var(--accent-orange); font-size: 0.9rem; display: inline-flex; align-items: center; gap: 0.25rem;">
+                            Tham gia ngay →
+                        </a>
+                    </div>
+                </div>
+                <!-- Promo 2 -->
+                <div class="promo-card reveal">
+                    <span class="promo-badge">TIẾT KIỆM</span>
+                    <div class="promo-icon">
+                        <span style="font-size: 2.8rem;">🍱</span>
+                    </div>
+                    <div class="promo-info">
+                        <h3>Combo Trưa Vui Vẻ</h3>
+                        <p>Combo gồm 1 món chính và 1 đồ uống tùy chọn giảm ngay 15% (11h-13h hằng ngày).</p>
+                        <a href="menu.html"
+                            style="font-weight: 700; color: #3b82f6; font-size: 0.9rem; display: inline-flex; align-items: center; gap: 0.25rem;">
+                            Đặt món ngay →
+                        </a>
+                    </div>
+                </div>
+                <!-- Promo 3 -->
+                <div class="promo-card reveal">
+                    <span class="promo-badge">FREE SHIP</span>
+                    <div class="promo-icon">
+                        <span style="font-size: 2.8rem;">🚀</span>
+                    </div>
+                    <div class="promo-info">
+                        <h3>Miễn phí vận chuyển</h3>
+                        <p>Nhận ngay ưu đãi miễn phí giao hàng trong bán kính 3km cho hóa đơn từ 150.000đ.</p>
+                        <a href="menu.html"
+                            style="font-weight: 700; color: #10b981; font-size: 0.9rem; display: inline-flex; align-items: center; gap: 0.25rem;">
+                            Xem thực đơn →
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 3. Category Quick Browse Section -->
+        <section style="margin-top: 6rem; text-align: center;" class="reveal">
+            <div style="margin-bottom: 2.5rem;">
+                <h2 class="section-title-wrapper reveal"
+                    style="font-size: 2.2rem; font-weight: 800; background: var(--accent-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; display: inline-block;">
+                    🍽️ Khám Phá Danh Mục Ẩm Thực
+                </h2>
+                <p style="color: var(--text-secondary); margin-top: 0.75rem; font-size: 1.05rem;">Lựa chọn hương vị bạn
+                    muốn thưởng thức hôm nay</p>
+            </div>
+            <div class="quick-categories-grid stagger-children">
+                <!-- Khai Vị -->
+                <div class="quick-cat-card reveal" onclick="window.location.href='menu.html?category=1'">
+                    <div class="quick-cat-icon">
+                        <span style="font-size: 2.4rem;">🥗</span>
+                    </div>
+                    <h3>Khai Vị</h3>
+                </div>
+                <!-- Món Chính -->
+                <div class="quick-cat-card reveal" onclick="window.location.href='menu.html?category=2'">
+                    <div class="quick-cat-icon">
+                        <span style="font-size: 2.4rem;">🍛</span>
+                    </div>
+                    <h3>Món Chính</h3>
+                </div>
+                <!-- Lẩu & Súp -->
+                <div class="quick-cat-card reveal" onclick="window.location.href='menu.html?category=3'">
+                    <div class="quick-cat-icon">
+                        <span style="font-size: 2.4rem;">🍲</span>
+                    </div>
+                    <h3>Lẩu & Súp</h3>
+                </div>
+                <!-- Tráng Miệng -->
+                <div class="quick-cat-card reveal" onclick="window.location.href='menu.html?category=4'">
+                    <div class="quick-cat-icon">
+                        <span style="font-size: 2.4rem;">🍰</span>
+                    </div>
+                    <h3>Tráng Miệng</h3>
+                </div>
+                <!-- Đồ Uống -->
+                <div class="quick-cat-card reveal" onclick="window.location.href='menu.html?category=5'">
+                    <div class="quick-cat-icon">
+                        <span style="font-size: 2.4rem;">🧃</span>
+                    </div>
+                    <h3>Đồ Uống</h3>
+                </div>
+            </div>
+        </section>
+
+        <!-- 4. Featured Foods Section (Dynamic API data) -->
+        <section style="margin-top: 6rem;" class="reveal">
+            <div style="text-align: center; margin-bottom: 3.5rem;">
+                <h2 class="section-title-wrapper reveal"
+                    style="font-size: 2.2rem; font-weight: 800; background: var(--accent-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; display: inline-block;">
+                    🔥 Món Ngon Nổi Bật
+                </h2>
+                <p style="color: var(--text-secondary); margin-top: 0.75rem; font-size: 1.05rem;">Những tuyệt tác ẩm
+                    thực được đông đảo thực khách yêu thích hàng đầu</p>
+            </div>
+
+            <div class="foods-grid" id="featured-foods-grid">
+                <!-- SKELETON LOADER PLACEHOLDERS (will be replaced by home.js after load) -->
+                <div class="skeleton-card">
+                    <div class="skeleton-img skeleton"></div>
+                    <div class="skeleton-info">
+                        <div class="skeleton-title skeleton"></div>
+                        <div class="skeleton-desc skeleton"></div>
+                        <div class="skeleton-footer">
+                            <div class="skeleton-price skeleton"></div>
+                            <div class="skeleton-btn skeleton"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="skeleton-card">
+                    <div class="skeleton-img skeleton"></div>
+                    <div class="skeleton-info">
+                        <div class="skeleton-title skeleton"></div>
+                        <div class="skeleton-desc skeleton"></div>
+                        <div class="skeleton-footer">
+                            <div class="skeleton-price skeleton"></div>
+                            <div class="skeleton-btn skeleton"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="skeleton-card">
+                    <div class="skeleton-img skeleton"></div>
+                    <div class="skeleton-info">
+                        <div class="skeleton-title skeleton"></div>
+                        <div class="skeleton-desc skeleton"></div>
+                        <div class="skeleton-footer">
+                            <div class="skeleton-price skeleton"></div>
+                            <div class="skeleton-btn skeleton"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="skeleton-card">
+                    <div class="skeleton-img skeleton"></div>
+                    <div class="skeleton-info">
+                        <div class="skeleton-title skeleton"></div>
+                        <div class="skeleton-desc skeleton"></div>
+                        <div class="skeleton-footer">
+                            <div class="skeleton-price skeleton"></div>
+                            <div class="skeleton-btn skeleton"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div style="text-align: center; margin-top: 3.5rem;">
+                <a href="menu.html" class="btn btn-outline"
+                    style="padding: 0.8rem 2.2rem; font-weight: 700; display: inline-flex; align-items: center; gap: 0.5rem;">
+                    Xem Tất Cả 50+ Món Ăn <i data-lucide="arrow-right" style="width: 16px; height: 16px;"></i>
+                </a>
+            </div>
+        </section>
+
+        <!-- 5. Features Section (Why Choose Us) -->
+        <section style="margin-top: 6rem; text-align: center;" class="reveal">
+            <div style="margin-bottom: 3.5rem;">
+                <h2 class="section-title-wrapper reveal"
+                    style="font-size: 2.2rem; font-weight: 800; background: var(--accent-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; display: inline-block;">
+                    💎 Tại Sao Nên Chọn HUIT Restaurant?
+                </h2>
+                <p style="color: var(--text-secondary); margin-top: 0.75rem; font-size: 1.05rem;">Cam kết mang lại trải
+                    nghiệm ẩm thực trọn vẹn và an toàn nhất</p>
+            </div>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 2.5rem;"
+                class="stagger-children">
+                <div class="why-card reveal">
+                    <div class="why-card-icon">
+                        <span style="font-size: 1.8rem;">🌿</span>
+                    </div>
+                    <h3 style="font-size: 1.35rem; font-weight: 700; margin-bottom: 0.75rem;">Nguyên Liệu Hữu Cơ</h3>
+                    <p style="color: var(--text-secondary); font-size: 0.95rem; line-height: 1.6;">100% rau củ quả
+                        VietGAP và thịt sạch tươi ngon được nhập mới mỗi sáng, bảo quản chuẩn chất lượng.</p>
+                </div>
+                <div class="why-card reveal">
+                    <div class="why-card-icon">
+                        <span style="font-size: 1.8rem;">👨‍🍳</span>
+                    </div>
+                    <h3 style="font-size: 1.35rem; font-weight: 700; margin-bottom: 0.75rem;">Đầu Bếp Đẳng Cấp</h3>
+                    <p style="color: var(--text-secondary); font-size: 0.95rem; line-height: 1.6;">Đội ngũ đầu bếp giàu
+                        kinh nghiệm, không ngừng sáng tạo để đem đến những món ăn bùng nổ hương vị.</p>
+                </div>
+                <div class="why-card reveal">
+                    <div class="why-card-icon">
+                        <span style="font-size: 1.8rem;">⚡</span>
+                    </div>
+                    <h3 style="font-size: 1.35rem; font-weight: 700; margin-bottom: 0.75rem;">Giao Hàng Siêu Tốc</h3>
+                    <p style="color: var(--text-secondary); font-size: 0.95rem; line-height: 1.6;">Quy trình đóng gói
+                        chuyên nghiệp giữ nhiệt tối ưu, cam kết giao món đến tay bạn chỉ trong vòng 30 phút.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 6. Culinary Story Section -->
+        <section class="story-section reveal">
+            <div class="story-img-wrapper">
+                <!-- Vertical Tab Indicators -->
+                <div class="story-tab-indicators">
+                    <button class="story-indicator-btn active" data-story="0">
+                        <span class="ind-num">01</span>
+                        <span class="ind-lbl">Bếp Trưởng</span>
+                    </button>
+                    <button class="story-indicator-btn" data-story="1">
+                        <span class="ind-num">02</span>
+                        <span class="ind-lbl">Triết Lý</span>
+                    </button>
+                    <button class="story-indicator-btn" data-story="2">
+                        <span class="ind-num">03</span>
+                        <span class="ind-lbl">Sứ Mệnh</span>
+                    </button>
+                </div>
+
+                <div class="story-img-container" id="story-click-target">
+                    <img id="story-display-img" class="animate-story-img"
+                        src="https://images.unsplash.com/photo-1577219491135-ce391730fb2c?q=80&w=600&auto=format&fit=crop"
+                        alt="Bếp trưởng HUIT Restaurant">
+                </div>
+
+                <div class="story-badge" id="story-dynamic-badge">
+                    <div class="story-badge-icon-wrapper">
+                        <i data-lucide="award" id="story-badge-icon"
+                            style="width: 24px; height: 24px; color: #ff8d00;"></i>
+                    </div>
+                    <div>
+                        <h4 id="story-badge-title" style="font-size: 0.95rem; font-weight: 700;">Nguyễn Hoàng Nam</h4>
+                        <p id="story-badge-desc"
+                            style="font-size: 0.75rem; color: var(--text-muted); font-weight: 600; margin: 0;">Bếp
+                            Trưởng Điều Hành (Executive Chef)</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="story-content" id="story-text-container">
+                <h2 id="story-title">Hành trình kiến tạo <br><span>nghệ thuật ẩm thực</span></h2>
+                <div class="story-paragraphs" id="story-desc">
+                    <p>Tại HUIT Restaurant, mỗi món ăn không đơn thuần là sự kết hợp của các nguyên liệu, mà là cả một
+                        công trình nghệ thuật được chắt chiu từ niềm đam mê, kỹ thuật thượng thừa và sự am hiểu sâu sắc
+                        về văn hóa ẩm thực thế giới.</p>
+                    <p>Chúng tôi tự hào kế thừa nét tinh hoa truyền thống của ẩm thực Việt Nam, kết hợp khéo léo với các
+                        xu hướng ẩm thực phương Tây hiện đại để mang đến những trải nghiệm độc đáo, khác biệt và đầy bất
+                        ngờ cho thực khách.</p>
+                </div>
+
+                <div class="story-stats" id="story-stats-container">
+                    <div class="story-stat-item">
+                        <h4 id="story-stat-1-val">10+</h4>
+                        <p id="story-stat-1-lbl">NĂM KINH NGHIỆM</p>
+                    </div>
+                    <div class="story-stat-item">
+                        <h4 id="story-stat-2-val">100+</h4>
+                        <p id="story-stat-2-lbl">MÓN ĂN MẪU</p>
+                    </div>
+                    <div class="story-stat-item">
+                        <h4 id="story-stat-3-val">15k+</h4>
+                        <p id="story-stat-3-lbl">KHÁCH HÀNG TIN YÊU</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 7. Online Reservation Section -->
+        <section id="reservation" class="reservation-section reveal-scale">
+            <div class="res-info">
+                <h2>Đặt Bàn <br>Trực Tuyến</h2>
+                <p>Lên kế hoạch cho một bữa tối ấm cúng cùng người thân hoặc buổi gặp mặt đối tác sang trọng. Đặt bàn
+                    trước để được phục vụ tốt nhất.</p>
+                <div class="res-contact">
+                    <div class="res-contact-item">
+                        <div class="res-contact-icon">
+                            <i data-lucide="phone" style="width: 18px; height: 18px; color: var(--accent-orange);"></i>
+                        </div>
+                        <div class="res-contact-text">
+                            <h4>Hotline Đặt Bàn</h4>
+                            <p>0999 999 999 - (028) 1234 5678</p>
+                        </div>
+                    </div>
+                    <div class="res-contact-item">
+                        <div class="res-contact-icon">
+                            <i data-lucide="map-pin"
+                                style="width: 18px; height: 18px; color: var(--accent-orange);"></i>
+                        </div>
+                        <div class="res-contact-text">
+                            <h4>Địa chỉ nhà hàng</h4>
+                            <p>140 Lê Trọng Tấn, Tây Thạnh, Tân Phú, TP. HCM</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="res-card">
+                <h3>Phiếu Đặt Bàn</h3>
+                <form id="reservation-form">
+                    <div class="form-group">
+                        <label for="res-name">Họ và Tên *</label>
+                        <input type="text" id="res-name" class="form-control" placeholder="Nhập tên của bạn" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="res-phone">Số điện thoại *</label>
+                        <input type="tel" id="res-phone" class="form-control" placeholder="Nhập số điện thoại liên hệ"
+                            required>
+                    </div>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                        <div class="form-group">
+                            <label for="res-guests">Số lượng khách *</label>
+                            <select id="res-guests" class="form-control" required>
+                                <option value="1">1 Người</option>
+                                <option value="2" selected>2 Người</option>
+                                <option value="4">4 Người</option>
+                                <option value="6">6 Người</option>
+                                <option value="8">8 Người</option>
+                                <option value="10">Nhóm từ 10+ người</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="res-date">Ngày đặt *</label>
+                            <input type="date" id="res-date" class="form-control" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="res-time">Giờ đến *</label>
+                        <select id="res-time" class="form-control" required>
+                            <option value="09:00">09:00 AM</option>
+                            <option value="11:30" selected>11:30 AM</option>
+                            <option value="12:30">12:30 PM</option>
+                            <option value="17:30">17:30 PM</option>
+                            <option value="19:00">19:00 PM</option>
+                            <option value="20:30">20:30 PM</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="res-notes">Ghi chú thêm</label>
+                        <textarea id="res-notes" class="form-control" rows="2"
+                            placeholder="Ví dụ: Phòng riêng, Ghế trẻ em, Yêu cầu hoa tươi..."></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary"
+                        style="width: 100%; margin-top: 1rem; padding: 0.9rem; justify-content: center; gap: 0.5rem;">
+                        Gửi Yêu Cầu Đặt Bàn <i data-lucide="send" style="width: 16px; height: 16px;"></i>
+                    </button>
+                </form>
+            </div>
+        </section>
+
+        <!-- 8. Testimonials Section -->
+        <section class="testimonials-section reveal">
+            <h2 class="section-title-wrapper reveal">💬 Khách Hàng Nói Gì Về Chúng Tôi</h2>
+            <div class="testimonial-container">
+                <!-- Slide 1 -->
+                <div class="testimonial-slide active">
+                    <div class="test-card">
+                        <i data-lucide="quote"
+                            style="width: 48px; height: 48px; color: rgba(255, 94, 44, 0.08); position: absolute; top: 1.5rem; left: 2rem;"></i>
+                        <p class="test-text">Không gian nhà hàng vô cùng ấm cúng và sang trọng. Các món ăn được chế biến
+                            tỉ mỉ, hương vị đậm đà rất đặc sắc. Đặc biệt nhân viên cực kỳ lịch sự, chu đáo.</p>
+                        <div class="test-user">
+                            <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=150&auto=format&fit=crop"
+                                alt="Nguyễn Minh Anh" class="test-avatar">
+                            <div class="test-user-info">
+                                <h4>Nguyễn Minh Anh</h4>
+                                <p>Doanh Nhân</p>
+                                <div class="test-stars">
+                                    <i data-lucide="star" style="fill: #ffb800; stroke: #ffb800;"></i>
+                                    <i data-lucide="star" style="fill: #ffb800; stroke: #ffb800;"></i>
+                                    <i data-lucide="star" style="fill: #ffb800; stroke: #ffb800;"></i>
+                                    <i data-lucide="star" style="fill: #ffb800; stroke: #ffb800;"></i>
+                                    <i data-lucide="star" style="fill: #ffb800; stroke: #ffb800;"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Slide 2 -->
+                <div class="testimonial-slide">
+                    <div class="test-card">
+                        <i data-lucide="quote"
+                            style="width: 48px; height: 48px; color: rgba(255, 94, 44, 0.08); position: absolute; top: 1.5rem; left: 2rem;"></i>
+                        <p class="test-text">Tôi cực kỳ ấn tượng với tốc độ giao hàng của HUIT Restaurant. Đồ ăn đóng
+                            gói cẩn thận, khi mang đến tay tôi vẫn còn bốc khói nóng hổi như vừa mới ra lò!</p>
+                        <div class="test-user">
+                            <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=150&auto=format&fit=crop"
+                                alt="Trần Hoàng Long" class="test-avatar">
+                            <div class="test-user-info">
+                                <h4>Trần Hoàng Long</h4>
+                                <p>Lập Trình Viên</p>
+                                <div class="test-stars">
+                                    <i data-lucide="star" style="fill: #ffb800; stroke: #ffb800;"></i>
+                                    <i data-lucide="star" style="fill: #ffb800; stroke: #ffb800;"></i>
+                                    <i data-lucide="star" style="fill: #ffb800; stroke: #ffb800;"></i>
+                                    <i data-lucide="star" style="fill: #ffb800; stroke: #ffb800;"></i>
+                                    <i data-lucide="star" style="fill: #ffb800; stroke: #ffb800;"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Slide 3 -->
+                <div class="testimonial-slide">
+                    <div class="test-card">
+                        <i data-lucide="quote"
+                            style="width: 48px; height: 48px; color: rgba(255, 94, 44, 0.08); position: absolute; top: 1.5rem; left: 2rem;"></i>
+                        <p class="test-text">Gia đình tôi thường tụ họp ăn uống ở đây mỗi dịp cuối tuần. Các bé nhà tôi
+                            cực kỳ mê các món tráng miệng ngọt dịu và món gà chiên giòn thơm bùi ở đây.</p>
+                        <div class="test-user">
+                            <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?q=80&w=150&auto=format&fit=crop"
+                                alt="Phạm Thu Trang" class="test-avatar">
+                            <div class="test-user-info">
+                                <h4>Phạm Thu Trang</h4>
+                                <p>Giảng Viên Đại Học</p>
+                                <div class="test-stars">
+                                    <i data-lucide="star" style="fill: #ffb800; stroke: #ffb800;"></i>
+                                    <i data-lucide="star" style="fill: #ffb800; stroke: #ffb800;"></i>
+                                    <i data-lucide="star" style="fill: #ffb800; stroke: #ffb800;"></i>
+                                    <i data-lucide="star" style="fill: #ffb800; stroke: #ffb800;"></i>
+                                    <i data-lucide="star" style="fill: #ffb800; stroke: #ffb800;"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="test-controls">
+                <button class="test-arrow" id="test-prev"><i data-lucide="arrow-left"></i></button>
+                <button class="test-arrow" id="test-next"><i data-lucide="arrow-right"></i></button>
+            </div>
+        </section>
+
+        <!-- 9. FAQ Accordion Section -->
+        <section class="faq-section reveal">
+            <h2 class="section-title-wrapper reveal">❓ Những Câu Hỏi Thường Gặp</h2>
+            <div class="faq-list">
+                <!-- FAQ 1 -->
+                <div class="faq-item">
+                    <div class="faq-header">
+                        <h3>Nhà hàng có phục vụ giao hàng tận nơi không?</h3>
+                        <i data-lucide="chevron-down" class="faq-icon" style="width: 16px; height: 16px;"></i>
+                    </div>
+                    <div class="faq-body">
+                        <div class="faq-body-content">
+                            Có, chúng tôi nhận giao hàng tận nơi trên toàn địa bàn TP. HCM thông qua hệ thống giao hàng
+                            riêng biệt. Đặc biệt, nhà hàng miễn phí vận chuyển trong phạm vi bán kính 3km cho các đơn
+                            hàng trị giá từ 150.000đ trở lên.
+                        </div>
+                    </div>
+                </div>
+                <!-- FAQ 2 -->
+                <div class="faq-item">
+                    <div class="faq-header">
+                        <h3>Tôi muốn tổ chức liên hoan hoặc họp mặt gia đình thì có phòng riêng không?</h3>
+                        <i data-lucide="chevron-down" class="faq-icon" style="width: 16px; height: 16px;"></i>
+                    </div>
+                    <div class="faq-body">
+                        <div class="faq-body-content">
+                            Nhà hàng HUIT Restaurant sở hữu chuỗi phòng VIP khép kín vô cùng ấm cúng, sang trọng phù hợp
+                            với các hội nghị nhỏ, liên hoan gia đình hoặc gặp mặt đối tác từ 10 đến 50 người mà hoàn
+                            toàn không thu phụ phí phòng riêng. Quý khách vui lòng đặt bàn trước 1 ngày để chúng tôi sắp
+                            xếp chu đáo nhất.
+                        </div>
+                    </div>
+                </div>
+                <!-- FAQ 3 -->
+                <div class="faq-item">
+                    <div class="faq-header">
+                        <h3>Làm thế nào để đặt bàn trước hoặc yêu cầu trang trí tiệc sinh nhật?</h3>
+                        <i data-lucide="chevron-down" class="faq-icon" style="width: 16px; height: 16px;"></i>
+                    </div>
+                    <div class="faq-body">
+                        <div class="faq-body-content">
+                            Bạn có thể dễ dàng điền thông tin vào phiếu đặt bàn ngay trên trang chủ này hoặc liên hệ
+                            hotline đặt bàn 0999 999 999. Nếu có nhu cầu set-up hoa tươi, bóng bay hoặc chuẩn bị bánh
+                            kem sinh nhật, quý khách có thể ghi chú trực tiếp vào form đặt bàn hoặc báo với nhân viên
+                            khi nhận cuộc gọi xác nhận.
+                        </div>
+                    </div>
+                </div>
+                <!-- FAQ 4 -->
+                <div class="faq-item">
+                    <div class="faq-header">
+                        <h3>Nhà hàng cam kết chất lượng vệ sinh an toàn thực phẩm như thế nào?</h3>
+                        <i data-lucide="chevron-down" class="faq-icon" style="width: 16px; height: 16px;"></i>
+                    </div>
+                    <div class="faq-body">
+                        <div class="faq-body-content">
+                            Chúng tôi luôn đặt sức khỏe khách hàng lên hàng đầu. Tất cả nguyên liệu tại HUIT Restaurant
+                            đều có nguồn gốc rõ ràng, đạt tiêu chuẩn VietGAP hoặc organic. Bếp ăn được thiết kế khép kín
+                            một chiều và đạt đầy đủ chứng nhận cơ sở đủ điều kiện Vệ Sinh An Toàn Thực Phẩm của Sở Y Tế
+                            TP. HCM.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Back to Top Button -->
+    <button class="back-to-top" id="back-to-top" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">
+        ↑
+    </button>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container" style="max-width: 1200px; margin: 0 auto; min-height: auto; padding: 0 2rem;">
+            <div class="footer-cols">
+                <!-- Col 1: Brand & Bio -->
+                <div class="footer-col">
+                    <a href="index.html" class="logo"
+                        style="margin-bottom: 1rem; display: inline-flex; gap: 0.5rem; align-items: center;">
+                        <i data-lucide="utensils"></i> HUIT Restaurant
+                    </a>
+                    <p style="margin-top: 0.5rem;">HUIT Restaurant mang sứ mệnh kiến tạo những trải nghiệm ẩm thực độc
+                        đáo, hiện đại và chuẩn mực 5 sao cho mọi gia đình Việt.</p>
+                    <div class="footer-socials">
+                        <a href="#" class="social-icon"><i data-lucide="facebook"
+                                style="width: 16px; height: 16px;"></i></a>
+                        <a href="#" class="social-icon"><i data-lucide="instagram"
+                                style="width: 16px; height: 16px;"></i></a>
+                        <a href="#" class="social-icon"><i data-lucide="youtube"
+                                style="width: 16px; height: 16px;"></i></a>
+                    </div>
+                </div>
+                <!-- Col 2: Quick Links -->
+                <div class="footer-col">
+                    <h3>Khám Phá</h3>
+                    <ul class="footer-links">
+                        <li><a href="index.html">Trang Chủ</a></li>
+                        <li><a href="menu.html">Thực Đơn</a></li>
+                        <li><a href="#reservation">Đặt Bàn Trực Tuyến</a></li>
+                        <li><a href="login.html">Đăng Nhập</a></li>
+                    </ul>
+                </div>
+                <!-- Col 3: Opening Hours -->
+                <div class="footer-col">
+                    <h3>Giờ Mở Cửa</h3>
+                    <ul class="footer-links" style="color: var(--text-secondary); font-size: 0.9rem;">
+                        <li style="display: flex; justify-content: space-between;"><span>Thứ 2 - Thứ 6:</span>
+                            <strong>09:00 - 22:00</strong></li>
+                        <li style="display: flex; justify-content: space-between;"><span>Thứ 7 - CN:</span>
+                            <strong>08:30 - 22:30</strong></li>
+                        <li
+                            style="display: flex; justify-content: space-between; margin-top: 0.5rem; color: var(--accent-orange);">
+                            <span>Ngày lễ:</span> <strong>Mở cửa bình thường</strong></li>
+                    </ul>
+                </div>
+                <!-- Col 4: Newsletter -->
+                <div class="footer-col">
+                    <h3>Đăng Ký Ưu Đãi</h3>
+                    <p>Nhận ngay các ưu đãi đặc quyền, thông tin món mới và coupon giảm giá từ chúng tôi hằng tuần.</p>
+                    <form class="newsletter-form" id="newsletter-form">
+                        <input type="email" class="form-control" placeholder="Địa chỉ email của bạn" required>
+                        <button type="submit" class="btn btn-primary">Gửi</button>
+                    </form>
+                </div>
+            </div>
+
+            <div
+                style="border-top: 1px solid var(--border-color); padding-top: 1.5rem; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 1rem; font-size: 0.85rem; color: var(--text-muted);">
+                <p>🍽️ HUIT Restaurant © 2026. Tất cả các quyền được bảo lưu.</p>
+                <p>Địa chỉ: 140 Lê Trọng Tấn, Tây Thạnh, Tân Phú, TP. HCM</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/app.js"></script>
+    <script src="js/home.js"></script>
+</body>
+
+</html>
